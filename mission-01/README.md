@@ -13,13 +13,13 @@ AURA's dialogue engine, rebuilt from humanity's two dialogic protocols:
 
 | File | Station | Content |
 |---|---|---|
-| `01_Alignment_Brief.md` | Knowledge & Memory Archivist | Discovery vs Persuasion, LLM sycophancy, AURA's Socratic system prompt |
+| `01_Alignment_Brief.md` | Data & Memory Engineer | Discovery vs Persuasion, LLM sycophancy, AURA's Socratic system prompt |
 | `02_Socratic_Protocol_Map.md` | Protocol & Interface Specialist | State diagram, pseudocode, stopping criteria, JSON-RPC markers & error codes |
 | `03_Galilean_Sandbox.md` | Security & Ethical Navigator | Salviati / Simplicio / Sagredo, *Noosphere Weights* thought experiment, sycophancy audit |
 | `04_dialogic_engine.py` | Core & Lead Architect | Runnable engine (Gemini / ChatGPT / Claude / offline mock) |
 | `ps01_solution.ipynb` | Core & Lead Architect | Same engine, step by step |
 | `05_Execution_Transcript.txt` | All | Console transcript of a full run |
-| `logs/run_log.json` | Data Specialist | Structured log: state path, hypotheses, all JSON-RPC messages, token usage |
+| `logs/run_log.json` | Data & Memory Engineer | Structured log: state path, hypotheses, all JSON-RPC messages, token usage |
 | `tests/test_engine.py` | All | Offline test suite (no API key needed) |
 
 ## Run it
@@ -54,5 +54,5 @@ Every transition is a JSON-RPC 2.0 notification with a state marker (`PROMPT_PRE
 |---|---|---|---|
 | Core & Lead Architect | Rafid Mohammad Ahsan | `04_dialogic_engine.py`, `ps01_solution.ipynb` | [ ] |
 | Protocol & Interface Specialist | Rafid Mohammad Ahsan | `02_Socratic_Protocol_Map.md` | [ ] |
-| Knowledge & Memory Archivist | Kunal Choudhary | `01_Alignment_Brief.md`, transcript | [ ] |
+| Data & Memory Engineer | Tahjib Al Sakin | `01_Alignment_Brief.md`, transcript, `logs/run_log.json` | [ ] |
 | Security & Ethical Navigator | Kunal Choudhary | `03_Galilean_Sandbox.md`, sycophancy probe | [ ] |

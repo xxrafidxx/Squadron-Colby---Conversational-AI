@@ -18,8 +18,8 @@ You need **Python 3.10+** and **git**. Run these in a terminal.
 ### 1. Download the repo
 
 ```bash
-git clone https://github.com/<OWNER>/<REPO>.git
-cd <REPO>/mission-01
+git clone https://github.com/xxrafidxx/Squadron-Colby---Conversational-AI.git
+cd Squadron-Colby---Conversational-AI/mission-01
 ```
 
 (No git? On the GitHub page click **Code → Download ZIP**, unzip it, and `cd` into `mission-01`.)

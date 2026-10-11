@@ -175,23 +175,62 @@ class LLMClient:
 
     TRANSIENT = ("503", "429", "500", "UNAVAILABLE", "RESOURCE_EXHAUSTED", "overloaded",
                  "high demand", "timeout", "timed out", "rate limit", "Connection")
+    GONE = ("404", "NOT_FOUND", "no longer available", "not found")
+    # Tried in order when the current Gemini model is retired or keeps failing.
+    GEMINI_FALLBACKS = ["gemini-3.8-flash", "gemini-3.8-flash-lite", "gemini-flash-latest",
+                        "gemini-flash-lite-latest", "gemini-2.0-flash"]
+
+    def _pace(self) -> None:
+        """Free API tiers allow only a few requests per minute; space calls out."""
+        gap = float(os.getenv("LLM_MIN_GAP", "4.5" if self.provider == "gemini" else "0"))
+        last = getattr(self, "_last_call", 0.0)
+        wait = gap - (time.time() - last)
+        if wait > 0:
+            time.sleep(wait)
+        self._last_call = time.time()
+
+    def _next_gemini_model(self) -> bool:
+        tried = getattr(self, "_tried_models", set()) | {self.model}
+        self._tried_models = tried
+        for m in self.GEMINI_FALLBACKS:
+            if m not in tried:
+                print(f"  ~ switching Gemini model {self.model} -> {m}", file=sys.stderr)
+                self.model = m
+                return True
+        return False
 
     def chat(self, system: str, messages: list[dict], max_tokens: int = 350,
              retries: int = 6) -> str:
-        """Call the LLM, retrying transient errors (overload, rate limit, network)
-        with exponential backoff: 2, 4, 8, 16, 30, 30 seconds."""
-        for attempt in range(retries + 1):
+        """Call the LLM with pacing, retries (2, 4, 8, 16, 30 s backoff) for overload and
+        rate limits, automatic Gemini model fallback, and one retry on an empty reply."""
+        failures = 0
+        attempt = 0
+        while True:
+            self._pace()
             try:
-                return self._chat_once(system, messages, max_tokens)
+                text = self._chat_once(system, messages, max_tokens)
+                if text or attempt >= retries:
+                    return text
+                max_tokens *= 2           # empty reply: model spent its budget thinking
+                attempt += 1
+                continue
             except Exception as exc:
                 msg = f"{type(exc).__name__}: {exc}"
-                if attempt == retries or not any(t.lower() in msg.lower() for t in self.TRANSIENT):
+                low = msg.lower()
+                gone = any(t.lower() in low for t in self.GONE)
+                transient = any(t.lower() in low for t in self.TRANSIENT)
+                if self.provider == "gemini" and (gone or (transient and failures >= 2)):
+                    if self._next_gemini_model():
+                        failures = 0
+                        continue
+                if not transient or attempt >= retries:
                     raise
-                wait = min(2 ** (attempt + 1), 30)
-                print(f"  ~ {self.provider} busy ({msg[:80]}...) - retrying in {wait}s",
+                failures += 1
+                attempt += 1
+                wait = min(2 ** attempt, 30)
+                print(f"  ~ {self.provider}/{self.model} busy ({msg[:70]}...) - retrying in {wait}s",
                       file=sys.stderr)
                 time.sleep(wait)
-        raise RuntimeError("unreachable")
 
     def _chat_once(self, system: str, messages: list[dict], max_tokens: int) -> str:
         """messages: [{"role": "user"|"assistant", "content": str}, ...]"""

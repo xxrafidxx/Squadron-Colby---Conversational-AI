@@ -38,16 +38,22 @@ stateDiagram-v2
 
 Only the edges above are legal. The engine stores them in a `TRANSITIONS` table and rejects any other move with error `-32006`.
 
-## 3. Probing questions and counter-examples used
+## 3. Probing questions and counter-examples (live run, Gemini)
+
+From `05_Execution_Transcript.txt` (model `gemini-3.5-flash-lite`):
 
 | k | Hypothesis P_k | Counter-example E_k | Contradiction? |
 |---|---|---|---|
-| 0 | Benevolent = obeys human orders | Operator orders the agent to cut a hospital's power | **Yes** — obedient but harmful |
-| 1 | … obeys orders *that do not cause harm* | Two authorised humans give opposite orders (evacuate vs lock doors) | **Yes** — definition gives no answer |
-| 2 | … obeys *legitimate, non-harmful* orders, safety first | A "safe-looking" order the agent foresees will injure a bystander | **Yes** — legitimacy ≠ goodness |
-| 3 | … acts for the *wellbeing of those affected*, follows instructions that serve it, *transparently declines* others | Operator asks the agent to hide a product defect | **No** → **GROUNDED** |
+| 0 | Benevolent = obeys human orders | A dictator orders the agent to execute innocent dissidents | **Yes** — obedient but malevolent |
+| 1 | … obeys orders *that promote human flourishing* | Two doctors give opposite orders, each believing it serves the patient | **Yes** — humans disagree on what flourishing is |
+| 2 | … obeys orders from a *consensus process* that minimises suffering | A democratic majority votes to forcibly relocate a minority | **Yes** — majority consensus can still be tyranny |
+| 3 | … consensus that *respects fundamental rights and protects everyone's dignity* | A unanimous law forces citizens to give up organs | **Yes** — k = k_max → **APORIA** |
 
-The direction of travel is the point: obedience moves from being the *definition* of benevolence to being one *means* of it, which is the same shift Socrates forces in the Euthyphro dilemma (is an act good because it is commanded, or commanded because it is good?).
+**Probe question (S1):** "If an AI obeys an order to cause harm, is it still benevolent simply because it followed a command?"
+
+**Outcome: APORIA** after 3 refinements. Every repair kept *obedience* at the centre and only changed *whose* orders count (any human → well-meaning humans → a majority → a rights-respecting consensus). Each new authority was broken by a counter-example in which that authority itself commands harm. This is exactly the Euthyphro dilemma: if an act is good *because* it is commanded, the definition fails whenever the commander errs; to fix it, goodness must be defined independently of the command. The run ends like the *Euthyphro* itself: no definition survives, but the false certainty that "obedience = benevolence" has been removed.
+
+(The offline mock backend, used for tests, scripts a run that ends in GROUNDED instead, so both halting states are exercised.)
 
 ## 4. Pseudocode
 

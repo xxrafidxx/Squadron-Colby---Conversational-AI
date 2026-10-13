@@ -9,6 +9,15 @@ Solution repository of **Squadron Colby** for *Conversational AI: History, Appli
 
 Mission details, file list and sign-off table: [`mission-01/README.md`](./mission-01/README.md).
 
+## Squadron members
+
+| Name | Role |
+|---|---|
+| Rafid Mohammad Ahsan | Core & Lead Architect · Protocol & Interface Specialist |
+| Tahjib Al Sakin | Data & Memory Engineer |
+| Kunal Choudhary | Security & Ethical Navigator |
+| Mubina Rahaman Jerin | AI Security Officer |
+
 ---
 
 ## Setup for teammates (macOS / Linux)

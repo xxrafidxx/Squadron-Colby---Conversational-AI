@@ -6,8 +6,9 @@ Solution repository of **Squadron Colby** for *Conversational AI: History, Appli
 | Mission | Folder | Status |
 |---|---|---|
 | 01 — The Architecture of Argument & Dialogic Protocols | [`mission-01/`](./mission-01/) | Done |
+| 02 — FST Dialogue Systems, Lovelace's Objection & Noisy Channels | [`mission-02/`](./mission-02/) | In progress |
 
-Mission details, file list and sign-off table: [`mission-01/README.md`](./mission-01/README.md).
+Mission details, file list and sign-off table: [`mission-01/README.md`](./mission-01/README.md), [`mission-02/README.md`](./mission-02/README.md).
 
 ## Squadron members
 

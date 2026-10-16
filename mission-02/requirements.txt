@@ -1,0 +1,6 @@
+# Install only the SDK for the LLM you use (the engine also runs offline without any).
+google-genai>=1.0      # Gemini  (GEMINI_API_KEY)
+openai>=1.40           # ChatGPT (OPENAI_API_KEY)
+anthropic>=0.40        # Claude  (ANTHROPIC_API_KEY)
+python-dotenv>=1.0
+pytest>=8.0

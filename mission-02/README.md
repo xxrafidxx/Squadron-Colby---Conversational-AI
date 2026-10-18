@@ -62,4 +62,4 @@ Noisy interrogation  10 questions → AURA (LLM, 7-word rule) → channel → de
 | Security & Ethics Sentinel | `03_Entropy_Hazard_Audit.md`: FST stress tests & entropy hazard audit verified | [ ] |
 | AI Security Officer | `06_AI_Act_Compliance.md`: EU AI Act & security review | [ ] |
 
-Also required by the mission PDF: test the FST on the course website's interactive simulator before signing off.
+Also required by the mission PDF: test the FST on the course website's interactive simulator. Done on 2026-10-18: canonical run plus the same 5 stress tests, compared with our FST in `03_Entropy_Hazard_Audit.md` §2.3.

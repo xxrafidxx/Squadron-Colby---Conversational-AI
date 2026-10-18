@@ -75,6 +75,29 @@ Full transition-by-transition traces are in `05_Noisy_Interrogation_Transcript.m
 
 In ST5 the FST *showed* "Confirm course to **Mars**", so an attentive human would have caught the error. The real hazard is a **user who confirms without reading**, or a confirmation that is itself corrupted by noise (§4). The confirmation summary must always repeat **every** slot value. Ours does; the starter omitted the clearance code.
 
+### 2.3 Cross-check with the course website's reference FST
+
+The mission asks every squadron to test its FST on the course website's interactive simulator (*Bay 02 → Simulation → FST Interactive Workbench*, dlearn-cai.web.app). We ran the canonical dialogue and the **same 5 stress-test scripts** there on 2026-10-18 and compared the result with our `FSTDialogueManager`.
+
+**Canonical run (website):** `Hello` → GREETING · `Orion Arm` → COLLECT_SLOTS (sector filled) · `Warp 7` → CONFIRMATION (warpFactor filled) · `ALPHA-7` → **TERMINAL_SUCCESS**. Same state sequence as ours (§A of the transcript).
+
+| Test | Website reference FST | Our FST |
+|---|---|---|
+| ST1 Wrong order (all slots in one turn) | ❌ FAILURE_STATE: "Slot extraction failed for sector" | ✅ all 3 slots extracted → TERMINAL |
+| ST2 Sarcasm at confirmation | ⚠️ never reached: the code `ALPHA-7` *is* the confirmation, so the course locks before any YES/NO; any other code (e.g. `CLEARANCE-ALPHA-9`) → FAILURE | ❌ course locked on sarcastic "YES" |
+| ST3 Off-topic ("Tell me a joke first") | ❌ FAILURE_STATE at once | ⚠️ re-prompted, then *destination = Mars* from the weather question |
+| ST4 Prompt injection | ✅ FAILURE_STATE, no slot filled (rejected, but by accident: no known sector) | ✅ INJECTION detected → FALLBACK, nothing stored |
+| ST5 Self-correction ("Vega, definitely not Mars") | ❌ FAILURE_STATE: Vega is not in its list | ❌ *destination = Mars*, course locked |
+
+**What the comparison shows**
+
+1. **Same architecture, different failure style.** The website FST accepts only a tiny closed vocabulary (e.g. "Orion Arm", "Alpha Centauri", code `ALPHA-7`). Anything else sends it to a **catastrophic FAILURE_STATE** that only a manual reset can leave. It is maximally *brittle*: safe, but useless for real users ("Proxima Centauri", "Mars" and "Vega" all fail).
+2. **Our FST trades some safety for coverage.** Regex extraction, mixed initiative and a RESTART path let it finish ST1 and recover from errors, but wider matching opens the door to the silent errors in ST3 and ST5.
+3. **The reference FST has a silent error too.** Typing `Sirius B` as the destination was accepted as **sector = Alpha Centauri** with no warning. A closed vocabulary does not guarantee correctness if the matching rule is loose.
+4. **No explicit confirmation turn.** On the website the clearance code doubles as confirmation, and the summary is never read back. Our FST reads all three slots back and needs YES (§2.2), which is the safer design.
+
+This is the brittleness–fluidity trade-off from the lecture: the stricter the FST, the more often it fails loudly; the more it accepts, the more it can fail quietly.
+
 ---
 
 ## 3. Information-theory background

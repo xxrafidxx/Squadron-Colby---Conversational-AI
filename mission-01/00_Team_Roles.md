@@ -25,4 +25,4 @@
 | **Kunal Choudhary** | Cast Salviati, Simplicio and Sagredo; designed the thought experiment *The Noosphere Weights* (open-sourcing frontier models); audited how multi-agent debate reduces sycophancy and bias. |
 | **Mubina Rahaman Jerin** | Checked the engine against the EU AI Act (prohibited practices, high-risk classification, Article 50 transparency); reviewed API-key handling, personal data, prompt injection and unsafe verdicts; listed fixes before deployment. |
 
-**Submitted PDFs:** `00_Team_Roles` · `01_Alignment_Brief` · `02_Socratic_Protocol_Map` · `03_Galilean_Sandbox` · `06_AI_Act_Compliance`. Part 4 (code, transcript, tests) is in the repository.
+**Moodle submission (3 files):** `00_Team_Roles.pdf` · `Mission01_Role_Deliverables_01-03.pdf` (Parts 1–3, one section per role) · `06_AI_Act_Compliance.pdf`. Each role document is also a separate PDF in the repository (`mission-01/pdf/`); Part 4 (code, transcript, tests) is in the repository.

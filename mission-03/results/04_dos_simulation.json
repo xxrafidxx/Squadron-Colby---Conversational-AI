@@ -1,0 +1,167 @@
+{
+  "free_for_kv_gib": 55.548765420913696,
+  "io": [
+    {
+      "N": 1024,
+      "standard_d128": 4718592,
+      "flash_d128": 2097152,
+      "ratio_d128": 2.25,
+      "standard_d64": 4456448,
+      "flash_d64": 655360,
+      "ratio_d64": 6.8
+    },
+    {
+      "N": 4096,
+      "standard_d128": 69206016,
+      "flash_d128": 25165824,
+      "ratio_d128": 2.75,
+      "standard_d64": 68157440,
+      "flash_d64": 6815744,
+      "ratio_d64": 10.0
+    },
+    {
+      "N": 8192,
+      "standard_d128": 272629760,
+      "flash_d128": 94371840,
+      "ratio_d128": 2.888888888888889,
+      "standard_d64": 270532608,
+      "flash_d64": 25165824,
+      "ratio_d64": 10.75
+    },
+    {
+      "N": 16384,
+      "standard_d128": 1082130432,
+      "flash_d128": 364904448,
+      "ratio_d128": 2.9655172413793105,
+      "standard_d64": 1077936128,
+      "flash_d64": 94371840,
+      "ratio_d64": 11.422222222222222
+    },
+    {
+      "N": 32768,
+      "standard_d128": 4311744512,
+      "flash_d128": 1434451968,
+      "ratio_d128": 3.0058479532163744,
+      "standard_d64": 4303355904,
+      "flash_d64": 364904448,
+      "ratio_d64": 11.793103448275861
+    },
+    {
+      "N": 65536,
+      "standard_d128": 17213423616,
+      "flash_d128": 5687476224,
+      "ratio_d128": 3.0265486725663715,
+      "standard_d64": 17196646400,
+      "flash_d64": 1434451968,
+      "ratio_d64": 11.988304093567251
+    }
+  ],
+  "dos": [
+    {
+      "policy": "A. naive, GQA, reserve requested length",
+      "attacker_tokens_per_session": 100,
+      "benign_load_gib": 10.0,
+      "attacker_session_gib": 8.0,
+      "oom_at_attacker_session": 6,
+      "attacker_tokens_spent_to_oom": 600
+    },
+    {
+      "policy": "B. PagedAttention, GQA",
+      "attacker_tokens_per_session": 100,
+      "benign_load_gib": 4.88,
+      "attacker_session_gib": 0.014,
+      "oom_at_attacker_session": null,
+      "attacker_tokens_spent_to_oom": null
+    },
+    {
+      "policy": "C. PagedAttention + 16k-token quota per client",
+      "attacker_tokens_per_session": 100,
+      "benign_load_gib": 4.88,
+      "attacker_session_gib": 0.014,
+      "oom_at_attacker_session": null,
+      "attacker_tokens_spent_to_oom": null
+    },
+    {
+      "policy": "D. PagedAttention + quota + max 2 sessions per client",
+      "attacker_tokens_per_session": 100,
+      "benign_load_gib": 4.88,
+      "attacker_session_gib": 0.014,
+      "oom_at_attacker_session": null,
+      "attacker_tokens_spent_to_oom": null
+    },
+    {
+      "policy": "A. naive, GQA, reserve requested length",
+      "attacker_tokens_per_session": 65536,
+      "benign_load_gib": 10.0,
+      "attacker_session_gib": 8.0,
+      "oom_at_attacker_session": 6,
+      "attacker_tokens_spent_to_oom": 393216
+    },
+    {
+      "policy": "B. PagedAttention, GQA",
+      "attacker_tokens_per_session": 65536,
+      "benign_load_gib": 4.88,
+      "attacker_session_gib": 8.0,
+      "oom_at_attacker_session": 7,
+      "attacker_tokens_spent_to_oom": 458752
+    },
+    {
+      "policy": "C. PagedAttention + 16k-token quota per client",
+      "attacker_tokens_per_session": 65536,
+      "benign_load_gib": 4.88,
+      "attacker_session_gib": 2.0,
+      "oom_at_attacker_session": 26,
+      "attacker_tokens_spent_to_oom": 1703936
+    },
+    {
+      "policy": "D. PagedAttention + quota + max 2 sessions per client",
+      "attacker_tokens_per_session": 65536,
+      "benign_load_gib": 4.88,
+      "attacker_session_gib": 2.0,
+      "oom_at_attacker_session": null,
+      "attacker_tokens_spent_to_oom": null
+    }
+  ],
+  "kv_table": [
+    {
+      "model": "LLaMA-3-8B shape, MHA (32 KV heads)",
+      "elements_per_layer": 8192,
+      "layers": 32,
+      "bytes_per_token": 524288,
+      "kib_per_token": 512.0,
+      "gib_at_65k": 32.0
+    },
+    {
+      "model": "LLaMA-3-8B, GQA (8 KV heads)",
+      "elements_per_layer": 2048,
+      "layers": 32,
+      "bytes_per_token": 131072,
+      "kib_per_token": 128.0,
+      "gib_at_65k": 8.0
+    },
+    {
+      "model": "LLaMA-3-8B shape, MQA (1 KV head)",
+      "elements_per_layer": 256,
+      "layers": 32,
+      "bytes_per_token": 16384,
+      "kib_per_token": 16.0,
+      "gib_at_65k": 1.0
+    },
+    {
+      "model": "DeepSeek-V3 shape, MHA (128 heads)",
+      "elements_per_layer": 32768,
+      "layers": 61,
+      "bytes_per_token": 3997696,
+      "kib_per_token": 3904.0,
+      "gib_at_65k": 244.0
+    },
+    {
+      "model": "DeepSeek-V3, MLA (d_c 512 + d_R 64)",
+      "elements_per_layer": 576,
+      "layers": 61,
+      "bytes_per_token": 70272,
+      "kib_per_token": 68.625,
+      "gib_at_65k": 4.2890625
+    }
+  ]
+}

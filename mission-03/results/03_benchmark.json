@@ -1,0 +1,124 @@
+{
+  "model": {
+    "layers": 32,
+    "q_heads": 32,
+    "head_dim": 128,
+    "dtype": "fp16"
+  },
+  "tokens_per_sec": 50,
+  "h100_hbm_gbps": 3350.0,
+  "cache_vs_recompute_ms": {
+    "recompute": 394.7093210000503,
+    "kv_cache": 56.684309999923244
+  },
+  "rows": [
+    {
+      "variant": "MHA (32:32)",
+      "seq_len": 1024,
+      "kv_heads": 32,
+      "kv_cache_mb": 512.0,
+      "bandwidth_gb_s_at_50tps": 26.8435456,
+      "h100_kv_read_ms_per_token": 0.16025997373134326,
+      "cpu_attn_ms_per_token_per_layer": 14.869170999986636
+    },
+    {
+      "variant": "MHA (32:32)",
+      "seq_len": 4096,
+      "kv_heads": 32,
+      "kv_cache_mb": 2048.0,
+      "bandwidth_gb_s_at_50tps": 107.3741824,
+      "h100_kv_read_ms_per_token": 0.641039894925373,
+      "cpu_attn_ms_per_token_per_layer": 18.334859999981745
+    },
+    {
+      "variant": "MHA (32:32)",
+      "seq_len": 16384,
+      "kv_heads": 32,
+      "kv_cache_mb": 8192.0,
+      "bandwidth_gb_s_at_50tps": 429.4967296,
+      "h100_kv_read_ms_per_token": 2.564159579701492,
+      "cpu_attn_ms_per_token_per_layer": null
+    },
+    {
+      "variant": "MHA (32:32)",
+      "seq_len": 32768,
+      "kv_heads": 32,
+      "kv_cache_mb": 16384.0,
+      "bandwidth_gb_s_at_50tps": 858.9934592,
+      "h100_kv_read_ms_per_token": 5.128319159402984,
+      "cpu_attn_ms_per_token_per_layer": null
+    },
+    {
+      "variant": "GQA (32:8, 4:1)",
+      "seq_len": 1024,
+      "kv_heads": 8,
+      "kv_cache_mb": 128.0,
+      "bandwidth_gb_s_at_50tps": 6.7108864,
+      "h100_kv_read_ms_per_token": 0.040064993432835816,
+      "cpu_attn_ms_per_token_per_layer": 9.166187000005266
+    },
+    {
+      "variant": "GQA (32:8, 4:1)",
+      "seq_len": 4096,
+      "kv_heads": 8,
+      "kv_cache_mb": 512.0,
+      "bandwidth_gb_s_at_50tps": 26.8435456,
+      "h100_kv_read_ms_per_token": 0.16025997373134326,
+      "cpu_attn_ms_per_token_per_layer": 9.433091999994758
+    },
+    {
+      "variant": "GQA (32:8, 4:1)",
+      "seq_len": 16384,
+      "kv_heads": 8,
+      "kv_cache_mb": 2048.0,
+      "bandwidth_gb_s_at_50tps": 107.3741824,
+      "h100_kv_read_ms_per_token": 0.641039894925373,
+      "cpu_attn_ms_per_token_per_layer": null
+    },
+    {
+      "variant": "GQA (32:8, 4:1)",
+      "seq_len": 32768,
+      "kv_heads": 8,
+      "kv_cache_mb": 4096.0,
+      "bandwidth_gb_s_at_50tps": 214.7483648,
+      "h100_kv_read_ms_per_token": 1.282079789850746,
+      "cpu_attn_ms_per_token_per_layer": null
+    },
+    {
+      "variant": "MQA (32:1)",
+      "seq_len": 1024,
+      "kv_heads": 1,
+      "kv_cache_mb": 16.0,
+      "bandwidth_gb_s_at_50tps": 0.8388608,
+      "h100_kv_read_ms_per_token": 0.005008124179104477,
+      "cpu_attn_ms_per_token_per_layer": 6.1345489999666825
+    },
+    {
+      "variant": "MQA (32:1)",
+      "seq_len": 4096,
+      "kv_heads": 1,
+      "kv_cache_mb": 64.0,
+      "bandwidth_gb_s_at_50tps": 3.3554432,
+      "h100_kv_read_ms_per_token": 0.020032496716417908,
+      "cpu_attn_ms_per_token_per_layer": 6.419961999995394
+    },
+    {
+      "variant": "MQA (32:1)",
+      "seq_len": 16384,
+      "kv_heads": 1,
+      "kv_cache_mb": 256.0,
+      "bandwidth_gb_s_at_50tps": 13.4217728,
+      "h100_kv_read_ms_per_token": 0.08012998686567163,
+      "cpu_attn_ms_per_token_per_layer": null
+    },
+    {
+      "variant": "MQA (32:1)",
+      "seq_len": 32768,
+      "kv_heads": 1,
+      "kv_cache_mb": 512.0,
+      "bandwidth_gb_s_at_50tps": 26.8435456,
+      "h100_kv_read_ms_per_token": 0.16025997373134326,
+      "cpu_attn_ms_per_token_per_layer": null
+    }
+  ]
+}

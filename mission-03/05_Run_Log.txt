@@ -1,0 +1,167 @@
+USSE NOOSPHERE · MISSION 03 · SQUADRON COLBY · RUN LOG
+Generated 2026-10-23T17:23:27Z · Python 3.13.16 · torch 2.14.1+cu130 · CPU only (2 cores)
+
+==============================================================================
+$ python 01_MultiHead_Attention_Core.py
+==============================================================================
+USSE NOOSPHERE · SUBSYSTEM 03 · PART 1: MULTI-HEAD SELF-ATTENTION
+
+=== Subsystem 03 · Variance preservation test (q, k ~ N(0,1)) ===
+  d_k |   Var(q·k) | expected |  Var(q·k/√d_k) | result
+----------------------------------------------------------
+   16 |      16.31 |       16 |         1.0195 | PASS
+   32 |      32.14 |       32 |         1.0044 | PASS
+   64 |      64.18 |       64 |         1.0027 | PASS
+  128 |     128.13 |      128 |         1.0010 | PASS
+  256 |     255.96 |      256 |         0.9998 | PASS
+  512 |     511.99 |      512 |         1.0000 | PASS
+[PASS] Scaling by 1/sqrt(d_k) keeps Var ≈ 1 for every head size.
+
+=== What happens WITHOUT scaling: softmax saturation ===
+  d_k | max weight (scaled) | max weight (unscaled) | ‖J‖ scaled | ‖J‖ unscaled
+----------------------------------------------------------------------------------
+   16 |               0.069 |                 0.533 |     0.1351 |       0.2943
+   64 |               0.069 |                 0.769 |     0.1373 |       0.2010
+  256 |               0.069 |                 0.888 |     0.1359 |       0.1335
+  512 |               0.068 |                 0.921 |     0.1363 |       0.0919
+Scaled: the softmax behaves the same for every d_k. Unscaled: scores grow like sqrt(d_k),
+the softmax drifts towards one-hot and its Jacobian (the gradient path) keeps shrinking.
+
+=== Causal mask check ===
+max attention weight above diagonal: 0.0e+00  ·  outputs 0-6 unchanged after editing tokens 7-9: True
+[PASS] No information flows from future tokens.
+
+=== Forward pass ===
+input (2, 16, 256) -> output (2, 16, 256) · attention (2, 4, 16, 16) · rows sum to 1: True
+parameters: 4 × d_model² = 262,144
+
+Figures written to figures/01_variance_scaling.png, figures/01_softmax_saturation.png
+
+[OK] Subsystem 03 attention mesh online.
+
+==============================================================================
+$ python 02_RoPE_Positional_Engine.py
+==============================================================================
+USSE NOOSPHERE · SUBSYSTEM 03 · PART 2: ROTARY POSITIONAL EMBEDDINGS
+
+=== Verification ===
+norm preserved under rotation: max |‖RoPE(x)‖ − ‖x‖| = 9.54e-07
+<RoPE(q,10), RoPE(k,25)> = 10.773232   <RoPE(q,50), RoPE(k,65)> = 10.773232   |diff| = 8.65e-08
+relative invariance over 200 random (q, k, m, n, δ): max relative error = 1.74e-06
+batched (B, h, N, d) = (2, 8, 16, 64) -> (2, 8, 16, 64)
+[PASS] RoPE is a pure rotation and the score depends only on m − n.
+
+=== RoPE vs ALiBi: position-only score by distance ===
+     Δ | RoPE s(Δ) | ALiBi bias (slope 0.125)
+     0 |     1.000 |                  -0.00
+     1 |     0.970 |                  -0.12
+     4 |     0.759 |                  -0.50
+    16 |     0.620 |                  -2.00
+    64 |     0.477 |                  -8.00
+   256 |     0.321 |                 -32.00
+  1024 |     0.204 |                -128.00
+  4096 |    -0.053 |                -512.00
+RoPE decays smoothly and stays bounded (|s| ≤ 1); ALiBi keeps falling linearly forever,
+so far tokens are pushed to ~0 weight: strong recency, simple extrapolation.
+
+=== Context-length extrapolation (d=128, base 10000) ===
+trained on 4096 tokens, asked for 32768:
+  18 of 64 planes never completed a full turn in training
+  slowest plane angle: 0.473 rad at train length -> 3.784 rad at target (unseen)
+  Position Interpolation (scale 8×) brings it back to 0.473 rad (inside the trained range)
+
+Figures written to figures/02_rope_vs_alibi_decay.png, figures/02_attention_heatmaps.png
+
+[OK] Positional engine online.
+
+==============================================================================
+$ python 03_GQA_and_KVCache_Benchmark.py
+==============================================================================
+USSE NOOSPHERE · SUBSYSTEM 03 · PART 3: GQA & KV-CACHE
+
+=== Correctness ===
+cached token-by-token decoding vs full causal pass: max |diff| = 4.77e-07
+GQA grouped view vs repeat_interleave:              max |diff| = 0.00e+00
+GQA with H_kv = H_q vs Part 1 MultiHeadSelfAttention: max |diff| = 1.79e-07
+[PASS] KV-cache and GQA are exact.
+
+=== Why cache? Generating 256 tokens with one layer (CPU) ===
+recompute prefix every step: 633 ms   ·   with KV-cache: 71 ms   ·   8.9× faster
+
+=== Benchmark: MHA vs GQA vs MQA ===
+KV-cache for a LLaMA-3-8B-shaped model (32 layers, 32 query heads, d_head 128, fp16, batch 1)
+Variant          |      N |   KV-cache | BW @50 tok/s | H100 KV read | CPU attn step
+                 |        |       (MB) |       (GB/s) |   (ms/token) |    (ms/layer)
+------------------------------------------------------------------------------------
+MHA (32:32)      |   1024 |        512 |         26.8 |        0.160 |         12.88
+MHA (32:32)      |   4096 |      2,048 |        107.4 |        0.641 |         17.88
+MHA (32:32)      |  16384 |      8,192 |        429.5 |        2.564 |         43.92
+MHA (32:32)      |  32768 |     16,384 |        859.0 |        5.128 |         75.38
+GQA (32:8, 4:1)  |   1024 |        128 |          6.7 |        0.040 |          9.24
+GQA (32:8, 4:1)  |   4096 |        512 |         26.8 |        0.160 |         10.30
+GQA (32:8, 4:1)  |  16384 |      2,048 |        107.4 |        0.641 |         24.82
+GQA (32:8, 4:1)  |  32768 |      4,096 |        214.7 |        1.282 |         30.63
+MQA (32:1)       |   1024 |         16 |          0.8 |        0.005 |          6.16
+MQA (32:1)       |   4096 |         64 |          3.4 |        0.020 |          8.08
+MQA (32:1)       |  16384 |        256 |         13.4 |        0.080 |          8.89
+MQA (32:1)       |  32768 |        512 |         26.8 |        0.160 |         11.65
+------------------------------------------------------------------------------------
+GQA 4:1 cuts the KV-cache by 75% (16 GiB -> 4 GiB at N=32768).
+At 50 tok/s, MHA at N=32768 needs 859 GB/s just to read the cache: 26% of an H100's HBM bandwidth, before any weights are read.
+
+Columns: KV-cache = 2·L·H_kv·d·N·2 bytes · BW = cache bytes read per token × 50 tokens/s ·
+H100 KV read = cache bytes ÷ 3.35 TB/s (lower bound, memory-bound decode) ·
+CPU attn step = measured median time of one decoding step of ONE layer (fp32, this machine).
+
+Results written to results/03_benchmark.json
+Figure written to figures/03_kv_cache_memory.png
+
+[OK] KV-cache transceiver online.
+
+==============================================================================
+$ python 04_kv_dos_simulation.py
+==============================================================================
+USSE NOOSPHERE · SUBSYSTEM 03 · PART 4: MEMORY HIERARCHY & DoS AUDIT
+
+=== FlashAttention IO (elements moved HBM <-> SRAM, one head, M ≈ 100K elements) ===
+      N | standard, d=128 | flash, d=128 |     × | standard, d=64 | flash, d=64 |     ×
+   1024 |        4.72e+06 |     2.10e+06 |  2.2× |       4.46e+06 |    6.55e+05 |  6.8×
+   4096 |        6.92e+07 |     2.52e+07 |  2.8× |       6.82e+07 |    6.82e+06 | 10.0×
+   8192 |        2.73e+08 |     9.44e+07 |  2.9× |       2.71e+08 |    2.52e+07 | 10.8×
+  16384 |        1.08e+09 |     3.65e+08 |  3.0× |       1.08e+09 |    9.44e+07 | 11.4×
+  32768 |        4.31e+09 |     1.43e+09 |  3.0× |       4.30e+09 |    3.65e+08 | 11.8×
+  65536 |        1.72e+10 |     5.69e+09 |  3.0× |       1.72e+10 |    1.43e+09 | 12.0×
+(the N×N score matrix alone at N=8192 is 128 MiB per head; ×32 heads = 4 GiB written and read back per layer by standard attention)
+
+=== KV-cache DoS on one H100 80 GB serving LLaMA-3-8B ===
+free for KV-cache: 74.5 GiB − weights 15.0 GiB − reserve 4.0 GiB = 55.5 GiB
+  MHA: 512 KiB/token -> 32.0 GiB per 65,536-token session -> 1 full-length session(s) fit
+  GQA: 128 KiB/token -> 8.0 GiB per 65,536-token session -> 6 full-length session(s) fit
+  MQA: 16 KiB/token -> 1.0 GiB per 65,536-token session -> 55 full-length session(s) fit
+
+20 benign users (request 4,096, use ≈2,000 tokens) connected · cheap attack: request 65,536 tokens, send only 100
+policy                                                 |  benign | per session |       OOM at | attacker cost
+A. naive, GQA, reserve requested length                |  10.0 G |      8.00 G |   session #6 |       600 tok
+B. PagedAttention, GQA                                 |   4.9 G |      0.01 G |  survives 64 |             —
+C. PagedAttention + 16k-token quota per client         |   4.9 G |      0.01 G |  survives 64 |             —
+D. PagedAttention + quota + max 2 sessions per client  |   4.9 G |      0.01 G |  survives 64 |             —
+
+20 benign users (request 4,096, use ≈2,000 tokens) connected · expensive attack: actually fill 65,536 tokens
+policy                                                 |  benign | per session |       OOM at | attacker cost
+A. naive, GQA, reserve requested length                |  10.0 G |      8.00 G |   session #6 |   393,216 tok
+B. PagedAttention, GQA                                 |   4.9 G |      8.00 G |   session #7 |   458,752 tok
+C. PagedAttention + 16k-token quota per client         |   4.9 G |      2.00 G |  session #26 | 1,703,936 tok
+D. PagedAttention + quota + max 2 sessions per client  |   4.9 G |      2.00 G |  survives 64 |             —
+
+=== KV-cache per token: MHA vs GQA vs MLA (bf16) ===
+  LLaMA-3-8B shape, MHA (32 KV heads)          512.0 KiB/token      32.0 GiB @ 65k
+  LLaMA-3-8B, GQA (8 KV heads)                 128.0 KiB/token       8.0 GiB @ 65k
+  LLaMA-3-8B shape, MQA (1 KV head)             16.0 KiB/token       1.0 GiB @ 65k
+  DeepSeek-V3 shape, MHA (128 heads)          3904.0 KiB/token     244.0 GiB @ 65k
+  DeepSeek-V3, MLA (d_c 512 + d_R 64)           68.6 KiB/token       4.3 GiB @ 65k
+
+Results written to results/04_dos_simulation.json
+Figure written to figures/04_dos_oom.png
+
+$ pytest -q
+24 passed in 1.68s

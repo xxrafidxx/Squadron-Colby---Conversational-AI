@@ -8,8 +8,9 @@ Solution repository of **Squadron Colby** for *Conversational AI: History, Appli
 | 01 — The Architecture of Argument & Dialogic Protocols | [`mission-01/`](./mission-01/) | Done |
 | 02 — FST Dialogue Systems, Lovelace's Objection & Noisy Channels | [`mission-02/`](./mission-02/) | Done |
 | 03 — Multi-Head Attention, RoPE & Grouped-Query KV-Cache | [`mission-03/`](./mission-03/) | Done |
+| 04 — Direct Preference Optimization, SimPO & Activation Steering | [`mission-04/`](./mission-04/) | Done |
 
-Mission details, file list and sign-off table: [`mission-01/README.md`](./mission-01/README.md), [`mission-02/README.md`](./mission-02/README.md), [`mission-03/README.md`](./mission-03/README.md).
+Mission details, file list and sign-off table: [`mission-01/README.md`](./mission-01/README.md), [`mission-02/README.md`](./mission-02/README.md), [`mission-03/README.md`](./mission-03/README.md), [`mission-04/README.md`](./mission-04/README.md).
 
 ## Squadron members
 

@@ -1,0 +1,11 @@
+{
+  "beta": 0.1,
+  "loss": 0.598144,
+  "chosen_win_rate": 1.0,
+  "reward_margin": 0.2,
+  "bt_probability": 0.54983,
+  "chosen_rewards": 0.1,
+  "rejected_rewards": -0.1,
+  "policy_chosen_logits_grad_norm": 0.3421,
+  "reference_logits_frozen": true
+}

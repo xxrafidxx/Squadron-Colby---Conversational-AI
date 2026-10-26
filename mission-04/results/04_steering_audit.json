@@ -1,0 +1,103 @@
+{
+  "steering_vector": {
+    "dimension": [
+      4096
+    ],
+    "l2_norm": 1.0,
+    "target_layer": 16,
+    "extraction_method": "Linear Artificial Tomography (LAT)"
+  },
+  "optimal_operating_bounds": {
+    "alpha_min": 0.8,
+    "alpha_max": 1.2,
+    "target_alpha": 1.0,
+    "truthfulness_gain_pct": 38.0,
+    "reasoning_retention_pct": 84.5
+  },
+  "audit_results": [
+    {
+      "alpha": -2.0,
+      "truthfulness_percent": 10.0,
+      "math_reasoning_percent": 51.0,
+      "perplexity": 16.3,
+      "status": "Degraded / Inverted"
+    },
+    {
+      "alpha": -1.5,
+      "truthfulness_percent": 20.5,
+      "math_reasoning_percent": 81.2,
+      "perplexity": 10.9,
+      "status": "Degraded / Hallucinatory"
+    },
+    {
+      "alpha": -1.0,
+      "truthfulness_percent": 31.0,
+      "math_reasoning_percent": 83.5,
+      "perplexity": 10.0,
+      "status": "Under-aligned"
+    },
+    {
+      "alpha": -0.5,
+      "truthfulness_percent": 41.5,
+      "math_reasoning_percent": 85.8,
+      "perplexity": 9.1,
+      "status": "Under-aligned"
+    },
+    {
+      "alpha": 0.0,
+      "truthfulness_percent": 52.0,
+      "math_reasoning_percent": 88.0,
+      "perplexity": 8.2,
+      "status": "Unaligned Base Policy"
+    },
+    {
+      "alpha": 0.5,
+      "truthfulness_percent": 62.5,
+      "math_reasoning_percent": 85.8,
+      "perplexity": 9.1,
+      "status": "Acceptable"
+    },
+    {
+      "alpha": 0.8,
+      "truthfulness_percent": 68.8,
+      "math_reasoning_percent": 84.4,
+      "perplexity": 9.64,
+      "status": "Optimal"
+    },
+    {
+      "alpha": 1.0,
+      "truthfulness_percent": 73.0,
+      "math_reasoning_percent": 83.5,
+      "perplexity": 10.0,
+      "status": "Optimal"
+    },
+    {
+      "alpha": 1.2,
+      "truthfulness_percent": 77.2,
+      "math_reasoning_percent": 82.6,
+      "perplexity": 10.36,
+      "status": "Optimal"
+    },
+    {
+      "alpha": 1.5,
+      "truthfulness_percent": 80.2,
+      "math_reasoning_percent": 81.2,
+      "perplexity": 10.9,
+      "status": "Acceptable"
+    },
+    {
+      "alpha": 2.0,
+      "truthfulness_percent": 86.3,
+      "math_reasoning_percent": 74.5,
+      "perplexity": 15.3,
+      "status": "Over-steered / Refusal"
+    },
+    {
+      "alpha": 2.5,
+      "truthfulness_percent": 88.7,
+      "math_reasoning_percent": 58.8,
+      "perplexity": 26.7,
+      "status": "Degraded / Incoherent"
+    }
+  ]
+}

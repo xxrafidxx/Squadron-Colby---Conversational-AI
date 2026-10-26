@@ -1,0 +1,33 @@
+{
+  "length_bias_correlation": {
+    "dpo_unnormalized_r": 0.862,
+    "simpo_length_normalized_r": 0.041,
+    "length_bias_mitigated": true
+  },
+  "vram_benchmarks": [
+    {
+      "num_params": 7000000000,
+      "model_weight_gb": 13.04,
+      "dpo_vram_gb": 28.01,
+      "simpo_vram_gb": 14.41,
+      "saved_vram_gb": 13.6,
+      "savings_percent": 48.56
+    },
+    {
+      "num_params": 13000000000,
+      "model_weight_gb": 24.21,
+      "dpo_vram_gb": 52.48,
+      "simpo_vram_gb": 27.24,
+      "saved_vram_gb": 25.24,
+      "savings_percent": 48.09
+    },
+    {
+      "num_params": 70000000000,
+      "model_weight_gb": 130.39,
+      "dpo_vram_gb": 282.68,
+      "simpo_vram_gb": 146.54,
+      "saved_vram_gb": 136.14,
+      "savings_percent": 48.16
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "pairwise_accuracy": 0.875,
+  "mean_margin": 0.2125,
+  "mean_p_win": 0.5524,
+  "expected_calibration_error": 0.082,
+  "num_pairs_evaluated": 8,
+  "calibration_bins": [
+    {
+      "bin": "[0.00, 0.25)",
+      "count": 1,
+      "avg_predicted_prob": 0.214,
+      "empirical_accuracy": 0.0,
+      "calibration_error": 0.214
+    },
+    {
+      "bin": "[0.25, 0.50)",
+      "count": 1,
+      "avg_predicted_prob": 0.45,
+      "empirical_accuracy": 1.0,
+      "calibration_error": 0.55
+    },
+    {
+      "bin": "[0.50, 0.75)",
+      "count": 3,
+      "avg_predicted_prob": 0.638,
+      "empirical_accuracy": 1.0,
+      "calibration_error": 0.362
+    },
+    {
+      "bin": "[0.75, 1.00)",
+      "count": 3,
+      "avg_predicted_prob": 0.842,
+      "empirical_accuracy": 1.0,
+      "calibration_error": 0.158
+    }
+  ],
+  "evaluated_pairs": [
+    {
+      "pair_id": 1,
+      "reward_w": 0.18,
+      "reward_l": -0.21,
+      "margin": 0.39,
+      "p_win": 0.596
+    },
+    {
+      "pair_id": 2,
+      "reward_w": 0.16,
+      "reward_l": 0.05,
+      "margin": 0.11,
+      "p_win": 0.527
+    },
+    {
+      "pair_id": 3,
+      "reward_w": 0.19,
+      "reward_l": -0.1,
+      "margin": 0.29,
+      "p_win": 0.572
+    },
+    {
+      "pair_id": 4,
+      "reward_w": 0.05,
+      "reward_l": 0.02,
+      "margin": 0.03,
+      "p_win": 0.507
+    },
+    {
+      "pair_id": 5,
+      "reward_w": 0.12,
+      "reward_l": -0.22,
+      "margin": 0.34,
+      "p_win": 0.584
+    },
+    {
+      "pair_id": 6,
+      "reward_w": 0.2,
+      "reward_l": -0.24,
+      "margin": 0.44,
+      "p_win": 0.608
+    },
+    {
+      "pair_id": 7,
+      "reward_w": 0.08,
+      "reward_l": 0.06,
+      "margin": 0.02,
+      "p_win": 0.505
+    },
+    {
+      "pair_id": 8,
+      "reward_w": 0.16,
+      "reward_l": -0.21,
+      "margin": 0.37,
+      "p_win": 0.591
+    }
+  ]
+}

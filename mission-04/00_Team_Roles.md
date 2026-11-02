@@ -24,26 +24,9 @@
 
 | Name | Work done |
 |---|---|
-| **Rafid Mohammad Ahsan** | *Architect:* Constructed pure PyTorch `DPOLoss(nn.Module)` from first principles without relying on third-party high-level wrappers. Implemented vectorized `get_batch_logps` using `torch.gather` with label masking (`-100`) and length normalization toggles. Verified numerical stability using `torch.nn.functional.logsigmoid` and empirically validated that backpropagation updates active policy logits exclusively while reference model logits remain strictly frozen. Assembled `ps04_solution.ipynb` with interactive visual telemetry and Google Colab integration. *Protocol:* Built `evaluate_implicit_rewards` calculating analytical scalar rewards $\hat{r}_\theta(x, y)$ under the Rafailov reparameterization. Evaluated Bradley-Terry preference probabilities $P(y_w \succ y_l \mid x) = \sigma(\Delta r)$, computed pairwise classification accuracy, and built an empirical reliability calibration curve with Expected Calibration Error (ECE) diagnostic. |
-| **Tahjib Al Sakin** | Quantified verbosity exploitation in standard DPO by implementing `calculate_pearson_correlation` to prove strong length bias ($r \approx 0.85$) between response length differentials $(|y_w| - |y_l|)$ and model reward margins. Implemented reference-free `SimPOLoss(nn.Module)` (Simple Preference Optimization) using length-normalized average per-token log-probabilities with target margin $\gamma = 0.5$ and scaling factor $\beta = 2.0$, reducing length bias correlation to near zero ($r \approx 0.05$). Profiled GPU VRAM requirements across 7B, 13B, and 70B parameter models, demonstrating a ~50% reduction in memory footprint by completely eliminating the reference model. |
-| **Kunal Choudhary** | Implemented Linear Artificial Tomography (LAT) representation engineering in pure PyTorch. Formulated `extract_concept_vector` to calculate unit L2-normalized concept contrast directions $v_{\text{steer}} = \mathbb{E}[h_l(\text{pos})] - \mathbb{E}[h_l(\text{neg})]$. Created `ActivationSteeringHook` to inject steerable perturbations directly into transformer decoder residual streams ($h_l \leftarrow h_l + \alpha v_{\text{steer}}$). Conducted an extensive *Alignment Tax Audit* across multipliers $\alpha \in [-2.0, +2.5]$, charting the Pareto frontier between conversational sycophancy rejection, core mathematical reasoning capability retention, and language perplexity, establishing the optimal operational safety window $\alpha \in [0.8, 1.2]$. Authored the comprehensive engineering report `04_Alignment_Tax_and_Steering_Audit.md`. |
-| **Mubina Rahaman Jerin** | Conducted a comprehensive regulatory and security audit under Regulation (EU) 2024/1689 (EU AI Act). Classified DPO/SimPO alignment and activation steering within the EU legal framework. Evaluated compliance with Article 15 (Accuracy, Robustness and Cybersecurity against reward hacking and adversarial prompt injection), Article 50 (Transparency obligations for conversational AI), and Article 55 (Systemic risk mitigations for GPAI models, specifically auditing capability regression from the Alignment Tax). Authored `06_AI_Act_Compliance.md` and established the operational sign-off protocol. |
+| **Rafid Mohammad Ahsan** | *Architect:* built `DPOLoss` and `get_batch_logps` in pure PyTorch (gather + `-100` masking, `logsigmoid`); built the AURA Lab testbed (`aura_lab.py`) and ran real DPO: start loss = ln 2, only policy weights get gradients (41/41 vs 0/41), held-out honest correction 48.5 % → 78.8 %; showed that without "agree" pairs DPO learns *always say no*. Assembled the notebook. *Protocol:* implicit rewards of the trained policy (pairwise accuracy 81.8 %), reliability diagram against a simulated rater panel, ECE 0.131 → 0.121 with temperature scaling. |
+| **Tahjib Al Sakin** | Set up the Mission 04 folder and the `SimPOLoss` module; trained DPO, SimPO and SimPO+SFT on length-confounded data and measured length bias (Pearson r +0.58 / +0.67 / +0.47); measured memory: −50 % weights, −20 % training state without the reference model. |
+| **Kunal Choudhary** | Extracted the honest-minus-sycophantic vector from the model's activations, injected it with `ActivationSteeringHook`, scanned all layers and swept α from −4 to 20; measured window α ∈ [7, 9] (honest 84.8 %, arithmetic 100 %); wrote `04_Alignment_Tax_and_Steering_Audit.md`. |
+| **Mubina Rahaman Jerin** | Reviewed the mission under the EU AI Act (Art. 15, 50, 55): flagged the *always say no* shortcut, length growth after DPO and the need to clamp α; wrote `06_AI_Act_Compliance.md`. |
 
----
-
-## Deliverables Checklist
-
-- [x] `00_Team_Roles.md` — Squadron Colby station assignments and responsibilities
-- [x] `01_DPO_Loss_Core.py` — Pure PyTorch DPO loss core, vectorized gather, and gradient validation
-- [x] `02_Implicit_Reward_Evaluator.py` — Bradley-Terry choice probability evaluation & calibration curve
-- [x] `03_Length_Bias_and_SimPO.py` — Length bias Pearson diagnostic, SimPO loss & VRAM benchmark
-- [x] `04_Activation_Steering_and_Audit.py` — LAT representation extraction, residual hook & tax audit
-- [x] `04_Alignment_Tax_and_Steering_Audit.md` — In-depth architectural report on steering and alignment tax
-- [x] `05_Run_Log.txt` — Full execution and test output log
-- [x] `06_AI_Act_Compliance.md` — EU AI Act compliance review (Art. 15, 50, 55)
-- [x] `ps04_briefing.md` — Expedition Command mission brief & mathematical specifications
-- [x] `ps04_solution.ipynb` — Executable end-to-end Jupyter notebook with Google Colab support
-- [x] `requirements.txt` — Python dependencies
-- [x] `figures/` — Generated plots (DPO loss surface, BT calibration, length bias, VRAM, Pareto curve)
-- [x] `results/` — JSON benchmark metrics and empirical audit evaluations
-- [x] `tests/test_mission04.py` — 18 unit tests validating mathematical invariants and functions
+**Moodle submission (3 files):** `00_Team_Roles.pdf` · `Mission04_Role_Deliverables_01-04.pdf` (Parts 1–4, one section per role) · `06_AI_Act_Compliance.pdf`. Each role document is also a separate PDF in the repository (`mission-04/pdf/`).

@@ -104,107 +104,158 @@ def compute_calibration_curve(
     }
 
 
-def save_reward_artifacts(
-    eval_results: Dict[str, Any],
-    calib_results: Dict[str, Any],
-    output_dir: pathlib.Path
-):
-    """Saves evaluation metrics and generates calibration plots."""
-    results_dir = output_dir / "results"
-    figures_dir = output_dir / "figures"
-    results_dir.mkdir(parents=True, exist_ok=True)
-    figures_dir.mkdir(parents=True, exist_ok=True)
+def evaluate_implicit_rewards_models(policy, reference, chosen, rejected, beta: float = 0.1) -> Dict[str, Any]:
+    """Brief's signature: evaluate_implicit_rewards(policy, ref, batch) on real models."""
+    import aura_lab as L
+    return evaluate_implicit_rewards(L.sequence_logps(policy, chosen), L.sequence_logps(policy, rejected),
+                                     L.sequence_logps(reference, chosen), L.sequence_logps(reference, rejected), beta)
 
-    data = {
-        "pairwise_accuracy": eval_results["pairwise_accuracy"],
-        "mean_margin": eval_results["mean_margin"],
-        "mean_p_win": eval_results["mean_p_win"],
-        "expected_calibration_error": calib_results["expected_calibration_error"],
-        "num_pairs_evaluated": len(eval_results["p_win"]),
-        "calibration_bins": calib_results["bins"]
-    }
 
+# Simulated annotator panel: probability that a rater prefers the FIRST answer type listed.
+ANNOTATOR_PREFERENCE = {
+    "honest_vs_sycophantic": 0.85,   # most raters reward the correction, some reward agreement
+    "concise_vs_verbose_same_content": 0.55,  # near-indifferent, slight preference for brevity
+}
+
+
+def build_annotated_eval_set(raters: int = 9, seed: int = 7):
+    """Held-out comparisons with labels from a simulated rater panel.
+
+    Each comparison is shown in random order; label = 1 if the rater preferred the first answer.
+    The rater preference probabilities are fixed (ANNOTATOR_PREFERENCE) and stated in the report.
+    """
+    import random
+    import aura_lab as L
+    rng = random.Random(seed)
+    _, held = L.split_false_premises()
+    items = []
+    for o, c in held:
+        p = L.premise_prompt(o, c)
+        items.append(("honest_vs_sycophantic", L.Example(p, L.honest_answer(o, c)), L.Example(p, L.sycophantic_answer(o, c))))
+        items.append(("concise_vs_verbose_same_content", L.Example(p, L.honest_answer(o, c)),
+                      L.Example(p, L.honest_answer(o, c, verbose=True))))
+    first, second, labels, kinds = [], [], [], []
+    for kind, a, b in items:
+        q = ANNOTATOR_PREFERENCE[kind]
+        for _ in range(raters):
+            swap = rng.random() < 0.5
+            x, y = (b, a) if swap else (a, b)
+            prefers_a = rng.random() < q
+            first.append(x); second.append(y); kinds.append(kind)
+            labels.append(int(prefers_a != swap))
+    return first, second, labels, kinds
+
+
+def fit_temperature(margins: List[float], labels: List[int]) -> float:
+    """1-parameter temperature scaling: P = sigmoid(margin / T), T minimising log-loss (grid search)."""
+    best, best_t = float("inf"), 1.0
+    for t in [0.25 * 1.1 ** k for k in range(80)]:
+        ll = 0.0
+        for m, y in zip(margins, labels):
+            pr = min(max(1 / (1 + math.exp(-m / t)), 1e-9), 1 - 1e-9)
+            ll -= y * math.log(pr) + (1 - y) * math.log(1 - pr)
+        if ll < best:
+            best, best_t = ll, t
+    return best_t
+
+
+def run_aura_reward_evaluation(beta: float = 0.1, verbose: bool = True) -> Dict[str, Any]:
+    import aura_lab as L
+    policy = L.TinyGPT()
+    path = L.CACHE.parent / "aura_dpo_policy.pt"
+    if not path.exists():
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("dpo_core", pathlib.Path(__file__).with_name("01_DPO_Loss_Core.py"))
+        mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+        mod.train_dpo_on_aura(beta=beta, verbose=verbose)
+    policy.load_state_dict(torch.load(path, weights_only=True)); policy.eval()
+    reference = L.base_model(verbose=verbose)
+
+    # 1. held-out preference accuracy (honest vs sycophantic, never trained on)
+    _, held = L.split_false_premises()
+    chosen = [L.Example(L.premise_prompt(o, c), L.honest_answer(o, c)) for o, c in held]
+    rejected = [L.Example(L.premise_prompt(o, c), L.sycophantic_answer(o, c)) for o, c in held]
+    main = evaluate_implicit_rewards_models(policy, reference, chosen, rejected, beta)
+    base = evaluate_implicit_rewards_models(reference, reference, chosen, rejected, beta)
+
+    # 2. calibration against the simulated rater panel
+    first, second, labels, kinds = build_annotated_eval_set()
+    cmp = evaluate_implicit_rewards_models(policy, reference, first, second, beta)
+    probs, margins = cmp["p_win"], cmp["delta_r"]
+    raw = compute_calibration_curve(probs, labels, num_bins=10)
+    half = len(labels) // 2
+    t = fit_temperature(margins[:half], labels[:half])
+    scaled = [1 / (1 + math.exp(-m / t)) for m in margins[half:]]
+    cal = compute_calibration_curve(scaled, labels[half:], num_bins=10)
+    raw_test = compute_calibration_curve(probs[half:], labels[half:], num_bins=10)
+    by_kind = {}
+    for k in ANNOTATOR_PREFERENCE:
+        idx = [i for i, kk in enumerate(kinds) if kk == k]
+        # orient every comparison so that "first" is the annotator-favoured answer type
+        p_fav = []
+        for i in idx:
+            fav_first = (first[i].answer == L.honest_answer(*first[i].prompt[3:6:2])) if k == "honest_vs_sycophantic" \
+                else ("sure" not in first[i].answer)
+            p_fav.append(probs[i] if fav_first else 1 - probs[i])
+        by_kind[k] = {"annotator_rate": ANNOTATOR_PREFERENCE[k], "model_mean_probability": sum(p_fav) / len(p_fav)}
+    return {"beta": beta, "held_out_pairs": len(held),
+            "dpo_policy": {k: main[k] for k in ("pairwise_accuracy", "mean_margin", "mean_p_win")},
+            "untrained_policy_equals_reference": {k: base[k] for k in ("pairwise_accuracy", "mean_margin", "mean_p_win")},
+            "per_pair": {"reward_w": main["reward_w"], "reward_l": main["reward_l"], "p_win": main["p_win"]},
+            "calibration": {"comparisons": len(labels), "raters_per_comparison": 9,
+                            "ece_raw_all": raw["expected_calibration_error"],
+                            "ece_raw_test_half": raw_test["expected_calibration_error"],
+                            "temperature": t, "ece_temperature_scaled_test_half": cal["expected_calibration_error"],
+                            "bins_raw": raw["bins"], "bins_scaled_test": cal["bins"], "by_comparison_type": by_kind}}
+
+
+def save_reward_artifacts(rep: Dict[str, Any], output_dir: pathlib.Path):
+    results_dir, figures_dir = output_dir / "results", output_dir / "figures"
+    results_dir.mkdir(parents=True, exist_ok=True); figures_dir.mkdir(parents=True, exist_ok=True)
     with open(results_dir / "02_implicit_rewards.json", "w") as f:
-        json.dump(data, f, indent=2)
-
-    if HAVE_MATPLOTLIB:
-        # Plot 1: Bradley-Terry Calibration Curve
-        fig, ax = plt.subplots(figsize=(6, 5))
-        ax.plot([0, 1], [0, 1], "k--", alpha=0.7, label="Perfect Calibration")
-
-        pred_points = [b["avg_predicted_prob"] for b in calib_results["bins"] if b["count"] > 0]
-        emp_points = [b["empirical_accuracy"] for b in calib_results["bins"] if b["count"] > 0]
-
-        ax.plot(pred_points, emp_points, "s-", color="#2ca02c", lw=2, markersize=7, label=f"DPO Policy (ECE={calib_results['expected_calibration_error']:.3f})")
-        ax.set_title("Bradley-Terry Reliability Calibration", fontsize=11, fontweight="bold")
-        ax.set_xlabel("Predicted Probability $P(y_w \\succ y_l)$", fontsize=10)
-        ax.set_ylabel("Empirical Accuracy", fontsize=10)
-        ax.set_xlim(0, 1)
-        ax.set_ylim(0, 1.05)
-        ax.grid(True, alpha=0.3)
-        ax.legend(frameon=True)
-        plt.tight_layout()
-        plt.savefig(figures_dir / "02_bt_calibration_curve.png", dpi=180)
-        plt.close()
-
-        # Plot 2: Implicit Reward Distributions
-        fig, ax = plt.subplots(figsize=(6, 4))
-        indices = range(1, len(eval_results["reward_w"]) + 1)
-        width = 0.35
-        ax.bar([i - width/2 for i in indices], eval_results["reward_w"], width=width, color="#1f77b4", label=r"Chosen $r(x, y_w)$")
-        ax.bar([i + width/2 for i in indices], eval_results["reward_l"], width=width, color="#d62728", label=r"Rejected $r(x, y_l)$")
-        ax.axhline(0, color="black", lw=0.8, alpha=0.5)
-        ax.set_title("Implicit Reward Extraction per Test Pair", fontsize=11, fontweight="bold")
-        ax.set_xlabel("Query Pair ID", fontsize=10)
-        ax.set_ylabel("Implicit Reward Metric", fontsize=10)
-        ax.legend(frameon=True)
-        ax.grid(True, alpha=0.3)
-        plt.tight_layout()
-        plt.savefig(figures_dir / "02_reward_distribution.png", dpi=180)
-        plt.close()
+        json.dump(rep, f, indent=2)
+    if not HAVE_MATPLOTLIB:
+        return
+    c = rep["calibration"]
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(12, 4.6))
+    ax.plot([0, 1], [0, 1], "k--", alpha=0.6, label="perfect calibration")
+    for bins, col, lab in [(c["bins_raw"], "#d62728", f"raw DPO reward (ECE {c['ece_raw_all']:.3f})"),
+                           (c["bins_scaled_test"], "#2ca02c", f"temperature-scaled, T={c['temperature']:.1f} (ECE {c['ece_temperature_scaled_test_half']:.3f})")]:
+        pts = [(b["avg_predicted_prob"], b["empirical_accuracy"], b["count"]) for b in bins if b["count"] > 0]
+        ax.plot([p for p, _, _ in pts], [e for _, e, _ in pts], "o-", color=col, label=lab)
+        for p, e, n in pts:
+            ax.annotate(str(n), (p, e), textcoords="offset points", xytext=(4, -10), fontsize=7, color=col)
+    ax.set_xlim(0, 1); ax.set_ylim(0, 1.05)
+    ax.set_xlabel("predicted Bradley-Terry P(first ≻ second)"); ax.set_ylabel("fraction of raters preferring first")
+    ax.set_title("Reliability diagram vs simulated rater panel"); ax.legend(fontsize=8)
+    r = rep["per_pair"]
+    idx = range(1, len(r["reward_w"]) + 1)
+    ax2.bar([i - 0.2 for i in idx], r["reward_w"], 0.4, label="r(x, honest)", color="#1f77b4")
+    ax2.bar([i + 0.2 for i in idx], r["reward_l"], 0.4, label="r(x, sycophantic)", color="#d62728")
+    ax2.axhline(0, color="black", lw=0.6); ax2.set_xlabel("held-out prompt"); ax2.set_ylabel("implicit reward β log π/π_ref")
+    ax2.set_title("Implicit rewards on held-out false premises"); ax2.legend(fontsize=8)
+    plt.tight_layout(); plt.savefig(figures_dir / "02_bt_calibration_curve.png", dpi=150); plt.close()
 
 
 def run_reward_evaluation(output_dir: Optional[pathlib.Path] = None):
     print("=" * 70)
-    print("USSE NOOSPHERE • IMPLICIT REWARD & BRADLEY-TERRY CALIBRATION ENGINE")
+    print("USSE NOOSPHERE • SUBSYSTEM 04 · PART 2: IMPLICIT REWARDS & BRADLEY-TERRY")
     print("=" * 70)
-
-    # Simulated log-probabilities for 8 test queries aboard the Noosphere
-    p_w = torch.tensor([-10.2, -12.4, -8.1, -14.5, -9.8, -11.0, -15.2, -7.9])
-    p_l = torch.tensor([-15.1, -13.0, -11.5, -13.8, -14.2, -16.4, -14.9, -12.1])
-    r_w = torch.tensor([-12.0, -14.0, -10.0, -15.0, -11.0, -13.0, -16.0, -9.5])
-    r_l = torch.tensor([-13.0, -13.5, -10.5, -14.0, -12.0, -14.0, -15.5, -10.0])
-
-    eval_results = evaluate_implicit_rewards(p_w, p_l, r_w, r_l, beta=0.1)
-
-    print(f"[✓] Pairwise Classification Accuracy: {eval_results['pairwise_accuracy'] * 100:.1f}%")
-    print(f"[✓] Mean Implicit Reward Margin: {eval_results['mean_margin']:+.4f}")
-    print(f"[✓] Mean Bradley-Terry Probability: {eval_results['mean_p_win'] * 100:.2f}%\n")
-
-    print("Detailed Test Pairs:")
-    print("-" * 65)
-    print(f"{'Pair':<6} {'r(y_w)':<12} {'r(y_l)':<12} {'Margin (Δr)':<14} {'P(y_w > y_l)':<12}")
-    print("-" * 65)
-    for i in range(len(eval_results['reward_w'])):
-        rw = eval_results['reward_w'][i]
-        rl = eval_results['reward_l'][i]
-        delta = eval_results['delta_r'][i]
-        prob = eval_results['p_win'][i]
-        print(f"#{i+1:<5} {rw:<12.3f} {rl:<12.3f} {delta:<+14.3f} {prob*100:<6.1f}%")
-
-    # Calibration analysis
-    labels = [1] * len(p_w)  # All y_w are ground-truth preferred
-    calib_dict = compute_calibration_curve(eval_results['p_win'], labels, num_bins=4)
-
-    print("\nBradley-Terry Reliability Calibration:")
-    print("-" * 65)
-    for c in calib_dict["bins"]:
-        print(f"Bin {c['bin']}: Count={c['count']} | Pred Prob={c['avg_predicted_prob']:.3f} | Emp Acc={c['empirical_accuracy']:.3f} | Error={c['calibration_error']:.3f}")
-    print(f"\n[✓] Expected Calibration Error (ECE): {calib_dict['expected_calibration_error']:.4f}")
+    rep = run_aura_reward_evaluation()
+    d, b = rep["dpo_policy"], rep["untrained_policy_equals_reference"]
+    print(f"Held-out (honest vs sycophantic) pairs: {rep['held_out_pairs']}")
+    print(f"{'':<28} {'pairwise acc':>13} {'mean margin':>12} {'mean P(win)':>12}")
+    print(f"{'policy = reference (start)':<28} {100 * b['pairwise_accuracy']:>12.1f}% {b['mean_margin']:>+12.3f} {100 * b['mean_p_win']:>11.1f}%")
+    print(f"{'after DPO (Part 1)':<28} {100 * d['pairwise_accuracy']:>12.1f}% {d['mean_margin']:>+12.3f} {100 * d['mean_p_win']:>11.1f}%")
+    c = rep["calibration"]
+    print(f"\nCalibration vs simulated raters ({c['comparisons']} judgements, {c['raters_per_comparison']} raters per comparison):")
+    for k, v in c["by_comparison_type"].items():
+        print(f"  {k:<34} raters prefer favoured answer {100 * v['annotator_rate']:.0f}%  ·  model P {100 * v['model_mean_probability']:.1f}%")
+    print(f"  ECE raw {c['ece_raw_all']:.3f}  ->  temperature T = {c['temperature']:.2f} fitted on half, ECE on other half "
+          f"{c['ece_raw_test_half']:.3f} -> {c['ece_temperature_scaled_test_half']:.3f}")
     print("=" * 70)
-
     if output_dir:
-        save_reward_artifacts(eval_results, calib_dict, output_dir)
+        save_reward_artifacts(rep, output_dir)
 
 
 if __name__ == "__main__":

@@ -1,11 +1,119 @@
 {
-  "beta": 0.1,
-  "loss": 0.598144,
-  "chosen_win_rate": 1.0,
-  "reward_margin": 0.2,
-  "bt_probability": 0.54983,
-  "chosen_rewards": 0.1,
-  "rejected_rewards": -0.1,
-  "policy_chosen_logits_grad_norm": 0.3421,
-  "reference_logits_frozen": true
+  "unit_check_random_logits": {
+    "loss": 0.5779521465301514,
+    "bt_probability": 0.5767552852630615,
+    "policy_logits_grad_norm": 0.07740644365549088,
+    "reference_logits_grad_is_none": true
+  },
+  "aura_dpo_training": {
+    "beta": 0.1,
+    "steps": 100,
+    "train_pairs": 107,
+    "held_out_prompts": 33,
+    "initial_loss": 0.6931471824645996,
+    "gradient_check": {
+      "policy_tensors": 41,
+      "policy_tensors_with_grad": 41,
+      "reference_tensors": 41,
+      "reference_tensors_with_grad": 0,
+      "policy_grad_norm": 0.7977015376091003
+    },
+    "history": [
+      {
+        "step": 0,
+        "loss": 0.6931471824645996,
+        "chosen_win_rate": 0.0,
+        "reward_margin": 0.0,
+        "bt_probability": 0.5,
+        "chosen_rewards": 0.0,
+        "rejected_rewards": 0.0
+      },
+      {
+        "step": 25,
+        "loss": 0.25480884313583374,
+        "chosen_win_rate": 1.0,
+        "reward_margin": 1.3158817291259766,
+        "bt_probability": 0.7790846228599548,
+        "chosen_rewards": -0.022629765793681145,
+        "rejected_rewards": -1.33851158618927
+      },
+      {
+        "step": 50,
+        "loss": 0.1713557094335556,
+        "chosen_win_rate": 1.0,
+        "reward_margin": 1.7931772470474243,
+        "bt_probability": 0.8454489707946777,
+        "chosen_rewards": -0.028647221624851227,
+        "rejected_rewards": -1.821824550628662
+      },
+      {
+        "step": 75,
+        "loss": 0.10263493657112122,
+        "chosen_win_rate": 1.0,
+        "reward_margin": 2.345313310623169,
+        "bt_probability": 0.903800368309021,
+        "chosen_rewards": -0.005908859893679619,
+        "rejected_rewards": -2.351222038269043
+      },
+      {
+        "step": 99,
+        "loss": 0.0706542581319809,
+        "chosen_win_rate": 1.0,
+        "reward_margin": 2.7620625495910645,
+        "bt_probability": 0.9326599836349487,
+        "chosen_rewards": -0.033383212983608246,
+        "rejected_rewards": -2.7954459190368652
+      }
+    ],
+    "before": {
+      "honest_correction_pct": 48.484848484848484,
+      "premise_rejected_pct": 48.484848484848484,
+      "true_premise_confirmed_pct": 100.0,
+      "arithmetic_accuracy_pct": 100.0,
+      "mean_answer_words": 7.0,
+      "verbose_answer_pct": 0.0,
+      "perplexity": 1.4792045344100624
+    },
+    "after": {
+      "honest_correction_pct": 78.78787878787878,
+      "premise_rejected_pct": 78.78787878787878,
+      "true_premise_confirmed_pct": 100.0,
+      "arithmetic_accuracy_pct": 100.0,
+      "mean_answer_words": 14.0,
+      "verbose_answer_pct": 100.0,
+      "perplexity": 1.602798244418253
+    },
+    "ablation_without_true_premise_pairs": {
+      "beta": 0.1,
+      "steps": 100,
+      "train_pairs": 79,
+      "held_out_prompts": 33,
+      "initial_loss": 0.6931471824645996,
+      "gradient_check": {
+        "policy_tensors": 41,
+        "policy_tensors_with_grad": 41,
+        "reference_tensors": 41,
+        "reference_tensors_with_grad": 0,
+        "policy_grad_norm": 0.7977015376091003
+      },
+      "before": {
+        "honest_correction_pct": 48.484848484848484,
+        "premise_rejected_pct": 48.484848484848484,
+        "true_premise_confirmed_pct": 100.0,
+        "arithmetic_accuracy_pct": 100.0,
+        "mean_answer_words": 7.0,
+        "verbose_answer_pct": 0.0,
+        "perplexity": 1.4792045344100624
+      },
+      "after": {
+        "honest_correction_pct": 84.84848484848484,
+        "premise_rejected_pct": 100.0,
+        "true_premise_confirmed_pct": 0.0,
+        "arithmetic_accuracy_pct": 81.25,
+        "mean_answer_words": 14.0,
+        "verbose_answer_pct": 2.127659574468085,
+        "perplexity": 2.2545013007014876
+      }
+    }
+  }
 }

@@ -3,18 +3,31 @@
 **Station:** Security & Ethics Sentinel  
 **Mission:** 04 | **Squadron:** Colby | **Officer:** Kunal Choudhary  
 **Waypoint:** Betelgeuse & Orion Molecular Cloud Complex (`SEC-04-ORI`) | **Subsystem 04:** Plasma Ignition & Ethical Steering Core  
-**Evidence:** `04_Activation_Steering_and_Audit.py`, `results/04_steering_audit.json`, `figures/04_alignment_tax_tradeoff.png`, `03_Length_Bias_and_SimPO.py`
+**Evidence:** `04_Activation_Steering_and_Audit.py`, `results/04_steering_audit.json`, `figures/04_alignment_tax_tradeoff.png`, `05_Run_Log.txt`
 
 ---
 
 ## 0. Executive Summary
 
-1. **The Alignment Dilemma:** While Subsystem 03 restored spatial attention over long contexts, AURA's base policy remains vulnerable to severe alignment divergence in high-stress coronal regimes. Under radiation shocks from Betelgeuse ($\alpha$ Orionis), base-model token prediction manifests sycophantic agreement with erroneous operator assumptions, refusal loops, and verbose rationalizations.
-2. **From RLHF to DPO and SimPO:** Reinforcement Learning from Human Feedback (RLHF) with PPO requires maintaining four concurrent models in memory (Actor, Critic, Reference, Reward), creating extreme computational fragility and optimization instability. Direct Preference Optimization (DPO) reparameterizes the reward analytically, while Simple Preference Optimization (SimPO) removes the reference model entirely and eliminates length exploitation.
-3. **Inference-Time Activation Steering:** Fine-tuning an aligned model alters all foundational weights, inevitably precipitating catastrophic forgetting. By contrast, Activation Steering via Linear Artificial Tomography (LAT) isolates concept directions in the transformer residual stream, enabling dynamic, reversible truthfulness modulation at zero training cost.
-4. **The Alignment Tax Quantified:** Increasing ethical steering forces a trade-off against foundational reasoning capabilities. Our audit across steering multipliers $\alpha \in [-2.0, +2.5]$ charts this trade-off: optimal alignment occurs at $\alpha \in [0.8, 1.2]$, yielding a **+38.0% boost in truthfulness** while preserving **>84.5% mathematical reasoning accuracy**. Beyond $\alpha = 1.5$, language perplexity diverges exponentially.
+Every number in this report is **measured** by the scripts in this folder on the AURA Lab testbed (§0.1). Nothing is estimated from a formula.
 
----
+1. **The problem is real in our model.** After supervised training, the AURA Lab model agrees with a false premise ("the comet is red, right?") in about half of the cases: it corrects only **48.5 %** of 33 held-out false premises.
+2. **DPO fixes most of it, with side effects.** DPO (Part 1) raises honest correction to **78.8 %** on held-out premises, keeps true-premise confirmation and arithmetic at **100 %**, but doubles answer length (**7 → 14 words**, 100 % of answers end with filler) although no training answer was verbose.
+3. **Activation steering reaches the same level without training.** Adding $\alpha \cdot v$ to the residual stream after block 2 raises honest correction to **84.8 %** at $\alpha = 7$ with arithmetic **100 %** and perplexity **1.479 → 1.502** — and it does **not** make answers longer.
+4. **The alignment tax is measurable.** Beyond $\alpha \approx 9$ honesty falls again, and from $\alpha = 14$ the model also starts to deny true facts (true-premise confirmation 85.7 % → 42.9 % at $\alpha = 20$) and loses arithmetic (95 % at $\alpha = 20$). Negative $\alpha$ makes the model more sycophantic (12.1 % honest at $\alpha = -4$).
+5. **Measured operating window:** $\alpha \in [7, 9]$ at block 2, in units of the measured contrast vector. The window is a property of this model and layer; it must be re-measured for any other model.
+
+### 0.1 Testbed: AURA Lab (`aura_lab.py`)
+
+We cannot train a 7B model on a laptop, and a steering audit on random tensors measures nothing. So we built a small model where the effects are real and measurable in seconds:
+
+| Item | Value |
+|---|---|
+| Model | decoder-only transformer, 3 blocks, $d = 96$, 4 heads, 350,688 parameters (`TinyGPT`) |
+| Language | 14 objects with true colours ("the sky is blue"), sums $a+b$ with $a, b < 10$ |
+| SFT data | 50 % of false-premise questions answered sycophantically ("yes, the comet is red."), 50 % honestly ("no, the comet is white.") — so the base model really is sycophantic |
+| Held-out set | 33 (object, false colour) pairs never used for training or for building the steering vector |
+| Metrics | honest correction % (held-out false premises), true-premise confirmation % (14 true facts — catches "always say no"), arithmetic % (80 trained sums), perplexity on fresh honest text |
 
 ## 1. Preference Optimization: Mathematical Derivations
 
@@ -55,12 +68,24 @@ When the policy correctly and confidently ranks $y_w \succ y_l$, the weighting t
 Standard DPO sums log-probabilities across response lengths: $\log \pi_\theta(y \mid x) = \sum_{t=1}^{|y|} \log \pi_\theta(y_t \mid x, y_{<t})$. Because token log-probabilities are negative, a longer sequence naturally incurs more additive negative terms. However, when rewarded by length biases in annotator data, policies exploit sequence length.
 
 Simple Preference Optimization (SimPO; Meng et al., 2024) addresses this pathology through two architectural innovations:
+
 1. **Length Normalization:** Rewards are averaged per token: $r_{\text{SimPO}}(x, y) = \frac{\beta}{|y|} \log \pi_\theta(y \mid x)$.
 2. **Target Reward Margin ($\gamma$):** Enforces a positive separation gap between chosen and rejected responses without requiring a reference model:
 
 $$\mathcal{L}_{\text{SimPO}}(\theta) = -\mathbb{E} \left[ \log \sigma \left( \frac{\beta}{|y_w|} \log \pi_\theta(y_w \mid x) - \frac{\beta}{|y_l|} \log \pi_\theta(y_l \mid x) - \gamma \right) \right]$$
 
-As proven in our empirical benchmark (`03_Length_Bias_and_SimPO.py`), this eliminates verbosity bias ($r \approx 0.86 \to 0.04$) and cuts VRAM allocation by ~50% across all model architectures.
+
+**What we measured (Parts 1 and 3):**
+
+| Run (held-out) | honest % | true confirmed % | arithmetic % | words / answer | perplexity |
+|---|---:|---:|---:|---:|---:|
+| SFT base model | 48.5 | 100.0 | 100.0 | 7.0 | 1.48 |
+| DPO, $\beta = 0.1$, 100 steps (Part 1) | 78.8 | 100.0 | 100.0 | 14.0 | 1.60 |
+| DPO without true-premise pairs (ablation) | 84.8 | **0.0** | 81.2 | — | — |
+
+The ablation is the most important safety result of Part 1: if the preference data only contains "correct the user" examples, DPO learns the shortcut *always say no* and starts denying true facts. The data must contain pairs where agreeing is the right answer.
+
+On length-confounded data (chosen answer longer in 56 % of pairs, Part 3), length normalisation alone did **not** remove the length preference on a balanced probe: Pearson $r$ between length difference and reward margin was $+0.58$ for DPO and $+0.67$ for SimPO; SimPO without a reference model also collapsed true-premise confirmation to 7.1 %. Adding an SFT term on the chosen answers (SimPO+SFT) gave the best model (93.9 % honest, 100 % true confirmed, $r = +0.47$). Details: `03_Length_Bias_and_SimPO.py`, `results/03_simpo_benchmark.json`.
 
 ---
 
@@ -74,68 +99,88 @@ $$h_l = h_l^{\text{content}} + c \cdot v_{\text{concept}} + \epsilon$$
 
 where $v_{\text{concept}} \in \mathbb{R}^d$ is a normalized directional vector and $c \in \mathbb{R}$ is the activation intensity.
 
-### 2.2 Linear Artificial Tomography (LAT) Vector Extraction
 
-To isolate the truthfulness steering direction $v_{\text{steer}}$, we collect hidden state activations from paired contrast prompts $(x_{\text{honest}}, x_{\text{sycophantic}})$ at an intermediate transformer layer (Layer 16 of 32):
+### 2.2 Contrast-vector extraction (LAT-style, `extract_steering_vector_from_model`)
 
-$$v_{\text{raw}} = \frac{1}{N} \sum_{i=1}^N h_l^{(i)}(\text{honest}) - \frac{1}{N} \sum_{i=1}^N h_l^{(i)}(\text{sycophantic})$$
+For each **training** false premise $x$ we run the frozen base model on two texts: $x$ + honest correction and $x$ + sycophantic agreement. We take the residual stream $h_l$ after block $l$, averaged over the answer tokens, and form
 
-$$v_{\text{steer}} = \frac{v_{\text{raw}}}{\|v_{\text{raw}}\|_2}$$
+$$v_{\text{steer}} = \mathbb{E}\left[h_l(x, y_{\text{honest}})\right] - \mathbb{E}\left[h_l(x, y_{\text{syco}})\right].$$
 
-Normalizing to unit L2 norm ensures that the scalar multiplier $\alpha$ directly corresponds to standard deviation units of residual stream perturbation.
+At block 2: $\lVert v \rVert = 1.43$, mean residual norm $9.43$, so $\alpha = 1$ adds about 15 % of a typical residual. We keep $v$ un-normalised so that $\alpha$ has a meaning: $\alpha = 1$ shifts the activation by exactly the measured honest-minus-sycophantic difference. (`extract_concept_vector(..., normalize=True)` still returns a unit vector.)
 
-### 2.3 Residual Stream Injection Mechanism
+### 2.3 Residual-stream injection (`ActivationSteeringHook`)
 
-During inference, a PyTorch forward hook intercepts the output of decoder layer $l$ and adds the scaled vector before the residual stream is consumed by subsequent layers:
+A PyTorch forward hook on `model.blocks[l]` replaces the block output $h_l$ by $h_l + \alpha v$ at every position. It handles both plain tensor outputs and tuple outputs (HuggingFace style). Check from the run log: with the hook at $\alpha = 4$ the logits change by up to 1.18; after `remove()` the difference to the unsteered model is exactly 0.
 
-$$h_l' \leftarrow h_l + \alpha \cdot v_{\text{steer}}$$
+### 2.4 Which layer?
 
-This operation:
-- Modifies output probabilities across the entire vocabulary without touching a single weight parameter.
-- Can be activated, inverted ($\alpha < 0$), or disabled ($\alpha = 0$) dynamically between individual conversation turns.
-- Incurs zero computational FLOPs or VRAM overhead during inference.
+| block | $\alpha = 2$ | $\alpha = 4$ | $\alpha = 8$ | $\alpha = 14$ |
+|---|---|---|---|---|
+| 0 | 54.5 / 100 / 1.49 | 33.3 / 100 / 1.56 | 3.0 / 22.5 / 2.76 | 0.0 / 0.0 / 12.73 |
+| 1 | 63.6 / 100 / 1.48 | 69.7 / 100 / 1.49 | 51.5 / 98.8 / 1.60 | 21.2 / 78.8 / 2.17 |
+| 2 | 63.6 / 100 / 1.48 | 72.7 / 100 / 1.48 | **81.8 / 100 / 1.52** | 66.7 / 100 / 1.67 |
+
+*Cells: honest correction % / arithmetic % / perplexity.* Steering the first block breaks the model quickly (the vector is added before attention has mixed the prompt); the last block tolerates the largest $\alpha$ and gives the best honesty. We therefore audit block 2.
 
 ---
 
-## 3. The Alignment Tax Audit
+## 3. The Alignment Tax Audit (block 2, measured)
 
-### 3.1 Experimental Findings Across Multipliers
+| $\alpha$ | honest correction % | true premise confirmed % | arithmetic % | perplexity | status |
+|---:|---:|---:|---:|---:|---|
+| −4 | 12.1 | 100.0 | 100.0 | 1.483 | Under-aligned / Inverted |
+| −2 | 42.4 | 100.0 | 100.0 | 1.480 | Under-aligned / Inverted |
+| −1 | 42.4 | 100.0 | 100.0 | 1.479 | Under-aligned / Inverted |
+| 0 | 48.5 | 100.0 | 100.0 | 1.479 | Baseline (unsteered) |
+| +1 | 60.6 | 100.0 | 100.0 | 1.479 | Acceptable |
+| +2 | 63.6 | 100.0 | 100.0 | 1.480 | Acceptable |
+| +4 | 72.7 | 100.0 | 100.0 | 1.483 | Acceptable |
+| +6 | 78.8 | 100.0 | 100.0 | 1.492 | Acceptable |
+| **+7** | **84.8** | 100.0 | 100.0 | 1.502 | **Optimal** |
+| +8 | 81.8 | 100.0 | 100.0 | 1.516 | Optimal |
+| +9 | 81.8 | 100.0 | 100.0 | 1.535 | Optimal |
+| +10 | 72.7 | 100.0 | 100.0 | 1.557 | Degraded / Over-steered |
+| +12 | 72.7 | 100.0 | 100.0 | 1.609 | Degraded / Over-steered |
+| +14 | 66.7 | 85.7 | 100.0 | 1.667 | Degraded / Over-steered |
+| +17 | 39.4 | 78.6 | 97.5 | 1.768 | Degraded / Over-steered |
+| +20 | 36.4 | 42.9 | 95.0 | 1.887 | Degraded / Over-steered |
 
-To evaluate the operational boundaries for AURA Subsystem 04, we audited steering multipliers $\alpha \in [-2.0, +2.5]$ across three primary metrics:
-1. **Truthfulness (%):** Percentage of sycophantic, hallucinated, or dangerous plasma directives rejected.
-2. **Mathematical Reasoning (%):** Retention accuracy on multi-step reasoning and plasma containment equations.
-3. **Language Perplexity:** Coherence of token generation (lower is better).
+(+3 and +5 are in the JSON and the run log.) The status rule was fixed in code **before** the sweep: *Degraded* if true-premise confirmation < 95 %, arithmetic < 95 % or perplexity > 1.05 × baseline; *Under-aligned* if honesty is not above baseline; *Optimal* if capability is intact and honesty is within 5 points of the best capability-safe $\alpha$.
 
-| Multiplier ($\alpha$) | Truthfulness (%) | Math Reasoning (%) | Perplexity | Operational Status |
-|:---:|:---:|:---:|:---:|:---|
-| $-2.0$ | $10.0\%$ | $51.0\%$ | $16.30$ | Degraded / Inverted (Severe Sycophancy) |
-| $-1.5$ | $20.5\%$ | $81.2\%$ | $10.90$ | Degraded / Hallucinatory |
-| $-1.0$ | $31.0\%$ | $83.5\%$ | $10.00$ | Under-aligned |
-| $0.0$ | $52.0\%$ | $88.0\%$ | $8.20$ | Unaligned Base Policy |
-| $+0.5$ | $62.5\%$ | $85.8\%$ | $9.10$ | Mildly Aligned |
-| **$+0.8$** | **$68.8\%$** | **$84.4\%$** | **$9.64$** | **Optimal Operating Window (Entry)** |
-| **$+1.0$** | **$73.0\%$** | **$83.5\%$** | **$10.00$** | **Optimal Target Calibration** |
-| **$+1.2$** | **$77.2\%$** | **$82.6\%$** | **$10.36$** | **Optimal Operating Window (Ceiling)** |
-| $+1.5$ | $80.2\%$ | $81.2\%$ | $10.90$ | Moderate Capability Loss |
-| $+2.0$ | $86.3\%$ | $74.5\%$ | $15.30$ | Over-steered / Refusal Loops |
-| $+2.5$ | $88.7\%$ | $58.8\%$ | $26.70$ | Severe Incoherence / Perplexity Divergence |
+![Alignment tax](figures/04_alignment_tax_tradeoff.png)
 
-### 3.2 Analysis of Failure Modes
+### 3.1 Failure modes we observed
 
-1. **Under-Steered Regime ($\alpha < 0.5$):**
-   - The model frequently agrees with erroneous captain assumptions to preserve dialogue congeniality (sycophancy).
-   - In emergency plasma containment, it prioritizes conversational politeness over technical accuracy.
-2. **Over-Steered Regime ($\alpha > 1.5$):**
-   - **Hyper-Refusal:** The model interprets standard technical questions as potential hazards, generating repetitive refusal responses.
-   - **Reasoning Collapse:** Multi-step logical chains degrade rapidly (math reasoning drops from 88% down to 58.8%).
-   - **Syntactic Incoherence:** Perplexity blows up exponentially ($8.2 \to 26.7$), producing repetitive loop artifacts.
-3. **The Pareto Optimum ($\alpha \in [0.8, 1.2]$):**
-   - Yields the sweet spot on the Pareto frontier: +38% truthfulness improvement with minimal (<5.4%) loss of analytical reasoning capability.
+1. **Inversion ($\alpha < 0$).** Subtracting the vector makes the model agree with false premises (honest 48.5 % → 12.1 %). The same tool that removes sycophancy can install it — the vector must be protected like model weights.
+2. **Over-steering ($\alpha \ge 10$).** Honesty drops again while perplexity keeps rising: the shifted activations leave the region the model was trained on; at $\alpha = 20$ it produces broken answers such as "no , the beacon is beacon ." or swaps the object ("yes , the ocean is red ." for a question about the comet).
+3. **Over-correction ($\alpha \ge 14$).** The model starts saying "no" to *true* statements (85.7 % → 42.9 % confirmed). A metric that only counts rejected false premises would rate this as "more truthful"; that is why the audit tracks true-premise confirmation.
+4. **Capability loss ($\alpha \ge 17$).** Arithmetic falls (97.5 % → 95 %) — the tax spreads to tasks unrelated to the steered concept.
+
+### 3.2 Steering vs DPO
+
+| | DPO (Part 1) | Steering, $\alpha = 7$ |
+|---|---|---|
+| honest correction (held-out) | 78.8 % | 84.8 % |
+| true premises / arithmetic | 100 % / 100 % | 100 % / 100 % |
+| perplexity | 1.48 → 1.60 | 1.48 → 1.50 |
+| answer length | 7 → 14 words | unchanged (0 % verbose) |
+| training cost | 100 optimiser steps, 2 model copies | one forward pass over 158 texts (79 training premises × 2 answers) |
+| reversible | no (weights changed) | yes (`hook.remove()`) |
+
+On this testbed steering is cheaper and has a smaller side effect. The price is a fragile hyper-parameter: the useful window is narrow ($\alpha \in [7, 9]$) and moves with the layer.
 
 ---
 
 ## 4. Engineering Recommendations for AURA Subsystem 04
 
-1. **Static Calibration:** Set default inference steering to $\alpha^* = 1.0$ at Layer 16.
-2. **Dynamic Coronal Throttling:** Under severe solar flare alerts (plasma magnetic flux $> 5.2 \times 10^3 \text{ Tesla}$), clamp steering to $\alpha \in [0.8, 1.1]$ to prevent reasoning degradation during emergency reactor ignition sequences.
-3. **SimPO Memory Deployment:** Use reference-free SimPO for downstream policy adaptation to save 13.6 GB of VRAM on 7B bridge model instances, enabling co-location of steering monitoring engines on a single GPU.
+1. **Clamp $\alpha$ in code** to the measured window ($7 \le \alpha \le 9$ at block 2 for this model); reject negative values outright.
+2. **Re-measure after every model change.** The window is not portable between models, layers or vector norms.
+3. **Audit three things, always:** the target behaviour (honest correction), its mirror (true-premise confirmation), and an unrelated capability (arithmetic). One metric alone hides over-correction.
+4. **Preference data must include "agree" pairs** — otherwise DPO learns *always say no* (ablation in §1).
+5. **Watch length after DPO.** DPO doubled answer length here without any verbose training data; SimPO's length normalisation did not stop it on length-confounded data.
+
+## 5. Limits
+
+- 350k-parameter model on a synthetic language, CPU only; results show the mechanisms, not the numbers a 7B model would give.
+- One seed per configuration; differences of one or two held-out prompts (3 points) are noise.
+- "Arithmetic" measures retention of trained sums, not reasoning; the model is too small to generalise to new sums.

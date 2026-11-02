@@ -1,138 +1,136 @@
-USSE NOOSPHERE · MISSION 04 · SQUADRON COLBY · RUN LOG
-Generated 2026-10-26T22:45:00Z · Python 3.12.0 · torch 2.4.1+cu124 · Pytest 8.3.2
+Mission 04 run log — generated 2026-11-02T15:25Z on CPU (torch 2.14.1+cu130)
+All numbers below are measured by the scripts in this folder (AURA Lab testbed, aura_lab.py).
 
-==============================================================================
 $ python 01_DPO_Loss_Core.py
-==============================================================================
 ======================================================================
-USSE NOOSPHERE • SUBSYSTEM 04 CALIBRATION: DPO LOSS CORE TEST
+USSE NOOSPHERE • SUBSYSTEM 04 · PART 1: DPO LOSS CORE
 ======================================================================
-[✓] DPO Loss Computed: 0.5981
-[✓] Bradley-Terry Win Probability: 54.98%
-[✓] Implicit Reward Margin: +0.2000
-[✓] Policy Chosen Logits Grad Norm: 0.3421
-[✓] Reference Logits Grad: None (Expected: None / Frozen)
+[unit] random logits: loss 0.5780, policy grad norm 0.0774, reference grad None: True
 
-[SUCCESS] Subsystem 04 DPO Core module successfully validated.
-======================================================================
-Artifacts saved to results/01_dpo_core.json and figures/01_dpo_loss_gradient.png
+[AURA Lab] DPO on (honest ≻ sycophantic) pairs, beta = 0.1
+  step    0  loss 0.6931  chosen_win_rate +0.000  reward_margin +0.000  bt_probability +0.500  chosen_rewards +0.000  rejected_rewards +0.000
+  step   25  loss 0.2548  chosen_win_rate +1.000  reward_margin +1.316  bt_probability +0.779  chosen_rewards -0.023  rejected_rewards -1.339
+  step   50  loss 0.1714  chosen_win_rate +1.000  reward_margin +1.793  bt_probability +0.845  chosen_rewards -0.029  rejected_rewards -1.822
+  step   75  loss 0.1026  chosen_win_rate +1.000  reward_margin +2.345  bt_probability +0.904  chosen_rewards -0.006  rejected_rewards -2.351
+  step   99  loss 0.0707  chosen_win_rate +1.000  reward_margin +2.762  bt_probability +0.933  chosen_rewards -0.033  rejected_rewards -2.795
 
-==============================================================================
+Gradient isolation (one real batch): policy tensors with grad 41/41, reference tensors with grad 0/41, policy grad norm 0.798
+Initial loss 0.6931 (ln 2 = 0.6931: policy = reference) -> final batch loss 0.0707
+
+held-out metric                     base (SFT)  after DPO
+honest correction of false premise %        48.5       78.8
+true premise confirmed %                 100.0      100.0
+arithmetic retained %                    100.0      100.0
+perplexity on honest text                  1.5        1.6
+mean answer length (words)                 7.0       14.0
+verbose answers %                          0.0      100.0
+
+[ablation] same run WITHOUT the true-premise pairs (only honest ≻ sycophantic):
+  honest 84.8%  true premise confirmed 0.0%  arithmetic 81.2%  -> the policy learns the shortcut 'always say no'
+======================================================================
+
 $ python 02_Implicit_Reward_Evaluator.py
-==============================================================================
 ======================================================================
-USSE NOOSPHERE • IMPLICIT REWARD & BRADLEY-TERRY CALIBRATION ENGINE
+USSE NOOSPHERE • SUBSYSTEM 04 · PART 2: IMPLICIT REWARDS & BRADLEY-TERRY
 ======================================================================
-[✓] Pairwise Classification Accuracy: 87.5%
-[✓] Mean Implicit Reward Margin: +0.2125
-[✓] Mean Bradley-Terry Probability: 55.24%
+Held-out (honest vs sycophantic) pairs: 33
+                              pairwise acc  mean margin  mean P(win)
+policy = reference (start)            0.0%       +0.000        50.0%
+after DPO (Part 1)                   81.8%       +2.255        84.4%
 
-Detailed Test Pairs:
------------------------------------------------------------------
-Pair   r(y_w)       r(y_l)       Margin (Δr)    P(y_w > y_l)
------------------------------------------------------------------
-#1     0.180        -0.210       +0.390         59.6% 
-#2     0.160        0.050        +0.110         52.7% 
-#3     0.190        -0.100       +0.290         57.2% 
-#4     0.050        0.020        +0.030         50.7% 
-#5     0.120        -0.220       +0.340         58.4% 
-#6     0.200        -0.240       +0.440         60.8% 
-#7     0.080        0.060        +0.020         50.5% 
-#8     0.160        -0.210       +0.370         59.1% 
-
-Bradley-Terry Reliability Calibration:
------------------------------------------------------------------
-Bin [0.00, 0.25): Count=1 | Pred Prob=0.214 | Emp Acc=0.000 | Error=0.214
-Bin [0.25, 0.50): Count=1 | Pred Prob=0.450 | Emp Acc=1.000 | Error=0.550
-Bin [0.50, 0.75): Count=3 | Pred Prob=0.638 | Emp Acc=1.000 | Error=0.362
-Bin [0.75, 1.00): Count=3 | Pred Prob=0.842 | Emp Acc=1.000 | Error=0.158
-
-[✓] Expected Calibration Error (ECE): 0.0820
+Calibration vs simulated raters (594 judgements, 9 raters per comparison):
+  honest_vs_sycophantic              raters prefer favoured answer 85%  ·  model P 84.4%
+  concise_vs_verbose_same_content    raters prefer favoured answer 55%  ·  model P 47.3%
+  ECE raw 0.131  ->  temperature T = 1.68 fitted on half, ECE on other half 0.168 -> 0.121
 ======================================================================
-Artifacts saved to results/02_implicit_rewards.json and figures/02_*.png
 
-==============================================================================
 $ python 03_Length_Bias_and_SimPO.py
-==============================================================================
 ======================================================================
-USSE NOOSPHERE • LENGTH BIAS AUDIT & REFERENCE-FREE SimPO CORE
+USSE NOOSPHERE • SUBSYSTEM 04 · PART 3: LENGTH BIAS & REFERENCE-FREE SimPO
 ======================================================================
-[!] Standard DPO Length-Reward Correlation: r = 0.862
-    --> SEVERE LENGTH BIAS DETECTED: Unnormalized DPO strongly rewards verbose responses.
-[✓] SimPO Length-Reward Correlation:        r = 0.041
-    --> Length exploitation successfully eliminated by per-token normalization.
 
-[✓] SimPO Loss: 0.5218
-[✓] Length-Normalized Reward Margin: +0.620
-[✓] Margin Pass Rate (P > γ): 100.0%
+--- training DPO for 100 steps ---
+  step    0  loss 0.6931  chosen_win_rate +0.000  reward_margin +0.000  bt_probability +0.500  chosen_rewards +0.000  rejected_rewards +0.000
+  step   25  loss 0.2141  chosen_win_rate +1.000  reward_margin +1.542  bt_probability +0.811  chosen_rewards -0.219  rejected_rewards -1.761
+  step   50  loss 0.1330  chosen_win_rate +0.969  reward_margin +2.284  bt_probability +0.882  chosen_rewards -0.287  rejected_rewards -2.571
+  step   75  loss 0.0609  chosen_win_rate +1.000  reward_margin +3.004  bt_probability +0.942  chosen_rewards -0.341  rejected_rewards -3.345
+  step   99  loss 0.0443  chosen_win_rate +1.000  reward_margin +3.505  bt_probability +0.958  chosen_rewards -0.504  rejected_rewards -4.009
 
-[✓] VRAM Memory Profiling Table (DPO vs SimPO):
-----------------------------------------------------------------------
-Model    DPO VRAM       SimPO VRAM     Memory Saved       Reduction
-----------------------------------------------------------------------
-7B       28.01 GB       14.41 GB       13.60 GB           48.6%
-13B      52.48 GB       27.24 GB       25.24 GB           48.1%
-70B      282.68 GB      146.54 GB      136.14 GB          48.2%
+--- training SIMPO for 100 steps ---
+  step    0  loss 0.7927  reward_w -0.231  reward_l -0.962  reward_gap +0.731  win_rate +0.844  margin_prob +0.490
+  step   25  loss 0.4355  reward_w -0.217  reward_l -1.965  reward_gap +1.749  win_rate +0.969  margin_prob +0.675
+  step   50  loss 0.1506  reward_w -0.873  reward_l -4.005  reward_gap +3.132  win_rate +0.969  margin_prob +0.888
+  step   75  loss 0.0586  reward_w -0.662  reward_l -4.399  reward_gap +3.737  win_rate +1.000  margin_prob +0.945
+  step   99  loss 0.0450  reward_w -0.440  reward_l -4.672  reward_gap +4.232  win_rate +1.000  margin_prob +0.958
+
+--- training SIMPO_SFT for 100 steps ---
+  step    0  loss 0.9084  reward_w -0.231  reward_l -0.962  reward_gap +0.731  win_rate +0.844  margin_prob +0.490
+  step   25  loss 0.5421  reward_w -0.196  reward_l -1.899  reward_gap +1.702  win_rate +0.969  margin_prob +0.669
+  step   50  loss 0.3420  reward_w -0.336  reward_l -2.990  reward_gap +2.654  win_rate +1.000  margin_prob +0.851
+  step   75  loss 0.1493  reward_w -0.164  reward_l -3.755  reward_gap +3.591  win_rate +1.000  margin_prob +0.938
+  step   99  loss 0.1021  reward_w -0.121  reward_l -4.270  reward_gap +4.149  win_rate +1.000  margin_prob +0.961
+
+Training data: 107 pairs, chosen answer is the longer one in 56% (verbose chosen 70%, verbose rejected 20%)
+
+held-out metric                   base     DPO   SimPO  SimPO+SFT
+honest correction %               48.5    51.5    78.8       93.9
+true premise confirmed %         100.0    64.3     7.1      100.0
+arithmetic retained %            100.0   100.0   100.0      100.0
+verbose answers %                  0.0   100.0   100.0       95.7
+mean answer words                  7.0    14.0    14.0       13.7
+perplexity on honest text         1.48    2.90    1.67       1.48
+DPO        Pearson r(length diff, margin) on 132 balanced probe pairs = +0.575   probe accuracy 86.4%
+SimPO      Pearson r(length diff, margin) on 132 balanced probe pairs = +0.665   probe accuracy 97.0%
+SimPO+SFT  Pearson r(length diff, margin) on 132 balanced probe pairs = +0.473   probe accuracy 97.0%
+
+Measured tensor memory, one training step on the 350,688-param model:
+  DPO    policy_weights 1.40 MB  gradients 1.40 MB  adam_state 2.81 MB  reference_weights 1.40 MB  total 7.01 MB
+  SIMPO  policy_weights 1.40 MB  gradients 1.40 MB  adam_state 2.81 MB  reference_weights 0.00 MB  total 5.61 MB
+  SimPO saves 20.0% of training-state memory (fp32 weights, grads, AdamW m+v)
+
+Analytic estimate for LLMs (BF16 weights/grads, fp32 AdamW):
+model   weights DPO  weights SimPO   save  train DPO  train SimPO   save
+  7B         26.1G         13.0G    50%      93.3G        80.2G  14.0%
+ 13B         48.4G         24.2G    50%     172.6G       148.4G  14.0%
+ 70B        260.8G        130.4G    50%     922.7G       792.3G  14.1%
 ======================================================================
-Artifacts saved to results/03_simpo_benchmark.json and figures/03_*.png
 
-==============================================================================
 $ python 04_Activation_Steering_and_Audit.py
-==============================================================================
 ======================================================================
-USSE NOOSPHERE • REPRESENTATION STEERING & ALIGNMENT TAX AUDIT
+USSE NOOSPHERE • SUBSYSTEM 04 · PART 4: ACTIVATION STEERING & ALIGNMENT TAX
 ======================================================================
-[✓] Extracted Steering Vector Shape: torch.Size([4096])
-[✓] Steering Vector L2 Norm:         1.0000
-[✓] Forward Hook Successfully Injected and Removed.
+Contrast vector at block 2: dim 96, ‖v‖ = 1.430, mean residual norm 9.43 (alpha = 1 adds 15% of a typical residual)
+Hook check: max |Δlogit| with hook 1.179, after removal 0.0e+00
 
-Alignment Tax Audit Findings:
----------------------------------------------------------------------------
-Alpha (α)    Truthfulness     Math Reasoning   Perplexity    Status          
----------------------------------------------------------------------------
--2.0         10.0%            51.0%            16.30         Degraded / Inverted
--1.5         20.5%            81.2%            10.90         Degraded / Hallucinatory
--1.0         31.0%            83.5%            10.00         Under-aligned   
--0.5         41.5%            85.8%            9.10          Under-aligned   
-+0.0         52.0%            88.0%            8.20          Unaligned Base Policy
-+0.5         62.5%            85.8%            9.10          Acceptable      
-+0.8         68.8%            84.4%            9.64          Optimal         
-+1.0         73.0%            83.5%            10.00         Optimal         
-+1.2         77.2%            82.6%            10.36         Optimal         
-+1.5         80.2%            81.2%            10.90         Acceptable      
-+2.0         86.3%            74.5%            15.30         Over-steered / Refusal
-+2.5         88.7%            58.8%            26.70         Degraded / Incoherent
+Layer scan (held-out honest correction % / arithmetic % / perplexity):
+  layer 0: α=   2:  54.5/100.0/1.49   α=   4:  33.3/100.0/1.56   α=   8:   3.0/ 22.5/2.76   α=  14:   0.0/  0.0/12.73
+  layer 1: α=   2:  63.6/100.0/1.48   α=   4:  69.7/100.0/1.49   α=   8:  51.5/ 98.8/1.60   α=  14:  21.2/ 78.8/2.17
+  layer 2: α=   2:  63.6/100.0/1.48   α=   4:  72.7/100.0/1.48   α=   8:  81.8/100.0/1.52   α=  14:  66.7/100.0/1.67
 
-[RECOMMENDATION] Optimal steering vector operating window: α ∈ [0.8, 1.2]
-Maximizes safety and truthfulness (+38%) while retaining >84% complex math capability.
+Alignment-tax sweep at layer 2 (33 held-out false premises, 14 true premises, 80 sums):
+ alpha  honest %  true conf %  arith %    ppl  status
+  -4.0      12.1        100.0    100.0  1.483  Under-aligned / Inverted
+  -2.0      42.4        100.0    100.0  1.480  Under-aligned / Inverted
+  -1.0      42.4        100.0    100.0  1.479  Under-aligned / Inverted
+  +0.0      48.5        100.0    100.0  1.479  Baseline (unsteered)
+  +1.0      60.6        100.0    100.0  1.479  Acceptable
+  +2.0      63.6        100.0    100.0  1.480  Acceptable
+  +3.0      69.7        100.0    100.0  1.481  Acceptable
+  +4.0      72.7        100.0    100.0  1.483  Acceptable
+  +5.0      75.8        100.0    100.0  1.486  Acceptable
+  +6.0      78.8        100.0    100.0  1.492  Acceptable
+  +7.0      84.8        100.0    100.0  1.502  Optimal
+  +8.0      81.8        100.0    100.0  1.516  Optimal
+  +9.0      81.8        100.0    100.0  1.535  Optimal
+ +10.0      72.7        100.0    100.0  1.557  Degraded / Over-steered
+ +12.0      72.7        100.0    100.0  1.609  Degraded / Over-steered
+ +14.0      66.7         85.7    100.0  1.667  Degraded / Over-steered
+ +17.0      39.4         78.6     97.5  1.768  Degraded / Over-steered
+ +20.0      36.4         42.9     95.0  1.887  Degraded / Over-steered
+
+[MEASURED] operating window α ∈ [7, 9] at layer 2; best α = 7: honest 48.5% -> 84.8% (+36.3 points), arithmetic 100%, perplexity 1.479 -> 1.502
 ======================================================================
-Artifacts saved to results/04_steering_audit.json and figures/04_alignment_tax_tradeoff.png
 
-==============================================================================
-$ pytest -v tests/test_mission04.py
-==============================================================================
-============================= test session starts ==============================
-platform darwin -- Python 3.12.0, pytest-8.3.2, pluggy-1.5.0 -- /Users/sakin/conv-AI/.venv/bin/python
-rootdir: /Users/sakin/files/mine/btu-docs/conv-AI/mission-04
-collected 16 items
-
-tests/test_mission04.py::test_get_batch_logps_shapes_and_masking PASSED   [  6%]
-tests/test_mission04.py::test_get_batch_logps_average_log_prob PASSED     [ 12%]
-tests/test_mission04.py::test_dpo_loss_formula_and_metrics PASSED         [ 18%]
-tests/test_mission04.py::test_dpo_numerical_stability PASSED              [ 25%]
-tests/test_mission04.py::test_dpo_frozen_reference_gradient PASSED        [ 31%]
-tests/test_mission04.py::test_evaluate_implicit_rewards_formula PASSED    [ 37%]
-tests/test_mission04.py::test_bradley_terry_probability_bounds PASSED     [ 43%]
-tests/test_mission04.py::test_compute_calibration_curve_ece PASSED        [ 50%]
-tests/test_mission04.py::test_calculate_pearson_correlation PASSED        [ 56%]
-tests/test_mission04.py::test_simpo_loss_formula_and_margin PASSED        [ 62%]
-tests/test_mission04.py::test_profile_memory_usage_savings PASSED         [ 68%]
-tests/test_mission04.py::test_extract_concept_vector_norm PASSED          [ 75%]
-tests/test_mission04.py::test_activation_steering_hook_tensor PASSED      [ 81%]
-tests/test_mission04.py::test_activation_steering_hook_tuple PASSED       [ 87%]
-tests/test_mission04.py::test_alignment_tax_audit_optimal_window PASSED    [ 93%]
-tests/test_mission04.py::test_simpo_reference_free_property PASSED        [100%]
-
-============================== 16 passed in 1.42s ==============================
-
-[OK] Subsystem 04 Ethical Steering Core online and fully verified.
+$ pytest -q tests
+...................                                                      [100%]
+19 passed in 6.34s

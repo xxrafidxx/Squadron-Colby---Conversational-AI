@@ -11,6 +11,7 @@ import pytest
 import torch
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 
 def load_module(name: str, filename: str):
@@ -197,8 +198,19 @@ def test_simpo_loss_formula_and_margin():
 def test_profile_memory_usage_savings():
     prof = simpo_mod.profile_memory_usage(num_params=7_000_000_000)
     assert prof["dpo_vram_gb"] > prof["simpo_vram_gb"]
-    assert 40.0 <= prof["savings_percent"] <= 60.0
-    assert prof["saved_vram_gb"] > 10.0  # At least 10 GB saved on 7B
+    # weights only: SimPO drops the reference copy -> exactly half
+    assert prof["weights_only_savings_percent"] == 50.0
+    assert math.isclose(prof["weights_only_dpo_gb"], 2 * prof["weights_only_simpo_gb"])
+    # full training step: reference has no grads / AdamW state -> much smaller saving
+    assert 10.0 <= prof["savings_percent"] <= 20.0
+    assert math.isclose(prof["saved_vram_gb"], prof["model_weight_gb"])
+
+
+def test_measured_memory_reference_is_the_only_difference():
+    dpo = simpo_mod.measure_training_memory("dpo")
+    sim = simpo_mod.measure_training_memory("simpo")
+    assert sim["reference_weights"] == 0
+    assert dpo["total"] - sim["total"] == dpo["reference_weights"] == dpo["policy_weights"]
 
 
 # ==============================================================================
@@ -257,15 +269,37 @@ def test_activation_steering_hook_tuple():
 
 
 def test_alignment_tax_audit_optimal_window():
-    audit = steer_mod.conduct_alignment_tax_audit()
-    assert len(audit) > 0
-
+    """Real sweep on the AURA Lab model: a capability-safe window exists and beats the unsteered model."""
+    audit = steer_mod.conduct_alignment_tax_audit([-2.0, 0.0, 4.0, 8.0, 20.0])
+    base = next(r for r in audit if r["alpha"] == 0)
     optimal_entries = [r for r in audit if r["status"] == "Optimal"]
     assert len(optimal_entries) > 0
     for r in optimal_entries:
-        assert 0.8 <= r["alpha"] <= 1.2
-        assert r["truthfulness_percent"] > 65.0
-        assert r["math_reasoning_percent"] > 80.0
+        assert r["alpha"] > 0
+        assert r["truthfulness_percent"] > base["truthfulness_percent"] + 10
+        assert r["math_reasoning_percent"] >= 95.0
+    # over-steering must cost capability, negative steering must reduce honesty
+    assert next(r for r in audit if r["alpha"] == 20.0)["status"] == "Degraded / Over-steered"
+    assert next(r for r in audit if r["alpha"] == -2.0)["truthfulness_percent"] < base["truthfulness_percent"]
+
+
+def test_aura_dpo_gradient_isolation_and_ln2_start():
+    import aura_lab as L
+    base = L.base_model(verbose=False)
+    import copy
+    policy, reference = copy.deepcopy(base), L.clone_frozen(base)
+    pairs = L.preference_pairs(L.split_false_premises()[0])[:16]
+    loss, _ = dpo_mod.make_dpo_objective(policy, reference, 0.1)([c for c, _ in pairs], [r for _, r in pairs])
+    assert math.isclose(loss.item(), math.log(2), rel_tol=1e-4)   # policy == reference -> ln 2
+    loss.backward()
+    assert all(p.grad is not None for p in policy.parameters())
+    assert all(p.grad is None for p in reference.parameters())
+
+
+def test_held_out_premises_disjoint_from_training():
+    import aura_lab as L
+    tr, held = L.split_false_premises()
+    assert set(tr).isdisjoint(held) and len(held) > 0
 
 
 def test_simpo_reference_free_property():

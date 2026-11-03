@@ -13,156 +13,898 @@
     "Audio scores: integers 1-5 using the anchors in the report. Leave fields null until you have the real value."
   ],
   "setup": {
-    "operator": null,
-    "date": null,
-    "notebook_name": null,
-    "notebooklm_plan": null,
+    "operator": "Kunal Choudhary (Squadron Colby); lab driven by Claude in the Claude desktop browser at Kunal's request",
+    "date": "2026-11-03",
+    "notebook_name": "Squadron Colby · Mission 05.",
+    "notebooklm_plan": "Google's notebook tool now shows as 'Gemini Notebook' (notebook.google.com, formerly NotebookLM); PRO account",
     "sources_uploaded": {
-      "A": null,
-      "B": null,
-      "C": null
+      "A": "2005.11401v4.pdf",
+      "B": "2404.16130v2.pdf",
+      "C": "USSE_Noosphere_Technical_Archive_Extract.pdf"
     },
-    "notes": null
+    "notes": "Protocol deviation: all 8 questions were asked in ONE chat thread. This version of the tool has no 'new chat' button, and clearing the history would have deleted messages, so it was not done. G1 was typed by Kunal; G2-G5 and N1-N3 were typed by Claude, word for word from the protocol. Citation verdicts were judged by Claude from the hovered source chunks. Citation = one sentence-badge pair (98 in total). Hovering a badge shows the chunk it cites; within one answer, the same badge number always points to the same chunk. Verdict rule: entailed = the cited chunk alone supports the whole sentence; partial = it supports part of it; not_entailed = it supports none of it or contradicts it."
   },
   "grounded_queries": [
     {
       "id": "G1",
       "query": "Lewis et al. (2020) describe two variants, RAG-Sequence and RAG-Token. Which of the two fits AURA's Subsystem 05 better for a crew question whose answer is spread over several archive records, and why?",
-      "response_verbatim": null,
-      "claims_total": null,
-      "claims_with_citation": null,
+      "response_verbatim": "RAG-Token fits AURA's Subsystem 05 better for a crew question whose answer is spread over several archive records[1][2][3].\nWhy RAG-Token is the Better Fit\nMulti-Document Synthesis:\nRAG-Token draws a different latent document for each target token during text generation, allowing the model to choose and aggregate content from multiple retrieved documents within a single output[1][2].\nRAG-Sequence, by contrast, uses the same retrieved document to generate the entire output sequence (marginalizing sequence probabilities per document)[4][5]. As a result, RAG-Sequence cannot easily combine distinct facts that reside in different records to construct a single unified answer[1][2].\nAlignment with AURA's Subsystem 05:\nSubsystem 05 connects AURA's language model to the ship's non-parametric archive records[6].\nWhen a crew question requires information distributed across multiple distinct archive records (such as multi-record or global queries highlighted in record C-23)[3], RAG-Token's per-token document switching allows AURA to pull relevant details from each separate record into a comprehensive, synthesized response[1][2][3].\n🚀 Would you like to explore how Subsystem 05's hybrid dense-sparse retrieval mechanism handles specific part numbers versus broad semantic queries?",
+      "claims_total": 6,
+      "claims_with_citation": 6,
       "citations": [
         {
-          "badge": null,
-          "source": null,
-          "highlighted_span": null,
-          "claim": null,
-          "verdict": null
+          "badge": 1,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "In the RAG-Token model we can draw a different latent document for each target token and marginalize accordingly. This allows the generator to choose content from several documents when producing an answer.",
+          "claim": "RAG-Token fits AURA's Subsystem 05 better for a crew question whose answer is spread over several archive records.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Jeopardy questions often contain two separate pieces of information, and RAG-Token may perform best because it can generate responses that combine content from several documents.",
+          "claim": "RAG-Token fits AURA's Subsystem 05 better for a crew question whose answer is spread over several archive records.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 3,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-23 · Global questions and local retrieval ... Retrieving the top few records cannot answer a global question, because the answer is spread across dozens of records.",
+          "claim": "RAG-Token fits AURA's Subsystem 05 better for a crew question whose answer is spread over several archive records.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 1,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "In the RAG-Token model we can draw a different latent document for each target token and marginalize accordingly. This allows the generator to choose content from several documents when producing an answer.",
+          "claim": "RAG-Token draws a different latent document for each target token ... allowing the model to choose and aggregate content from multiple retrieved documents within a single output.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 2,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Jeopardy questions often contain two separate pieces of information, and RAG-Token may perform best because it can generate responses that combine content from several documents.",
+          "claim": "RAG-Token draws a different latent document for each target token ... allowing the model to choose and aggregate content from multiple retrieved documents within a single output.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 4,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "In one approach, RAG-Sequence, the model uses the same document to predict each target token. The second approach, RAG-Token, can predict each target token based on a different document.",
+          "claim": "RAG-Sequence, by contrast, uses the same retrieved document to generate the entire output sequence (marginalizing sequence probabilities per document).",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 5,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "The RAG-Sequence model uses the same retrieved document to generate the complete sequence. Technically, it treats the retrieved document as a single latent variable that is marginalized to get the seq2seq probability p(y|x) via a top-K approximation.",
+          "claim": "RAG-Sequence, by contrast, uses the same retrieved document to generate the entire output sequence (marginalizing sequence probabilities per document).",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 1,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "In the RAG-Token model we can draw a different latent document for each target token and marginalize accordingly. This allows the generator to choose content from several documents when producing an answer.",
+          "claim": "As a result, RAG-Sequence cannot easily combine distinct facts that reside in different records to construct a single unified answer.",
+          "verdict": "not_entailed"
+        },
+        {
+          "badge": 2,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Jeopardy questions often contain two separate pieces of information, and RAG-Token may perform best because it can generate responses that combine content from several documents.",
+          "claim": "As a result, RAG-Sequence cannot easily combine distinct facts that reside in different records to construct a single unified answer.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 6,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-03 · Why AURA's archive link failed: AURA Subsystem 05, the Dual-Path Associative Memory Core, connects AURA's language model to the ship's non-parametric archives.",
+          "claim": "Subsystem 05 connects AURA's language model to the ship's non-parametric archive records.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 3,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-23 · Global questions and local retrieval ... Retrieving the top few records cannot answer a global question, because the answer is spread across dozens of records.",
+          "claim": "When a crew question requires information distributed across multiple distinct archive records (such as multi-record or global queries highlighted in record C-23)",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 1,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "In the RAG-Token model we can draw a different latent document for each target token and marginalize accordingly. This allows the generator to choose content from several documents when producing an answer.",
+          "claim": "RAG-Token's per-token document switching allows AURA to pull relevant details from each separate record into a comprehensive, synthesized response.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Jeopardy questions often contain two separate pieces of information, and RAG-Token may perform best because it can generate responses that combine content from several documents.",
+          "claim": "RAG-Token's per-token document switching allows AURA to pull relevant details from each separate record into a comprehensive, synthesized response.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 3,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-23 · Global questions and local retrieval ... Retrieving the top few records cannot answer a global question, because the answer is spread across dozens of records.",
+          "claim": "RAG-Token's per-token document switching allows AURA to pull relevant details from each separate record into a comprehensive, synthesized response.",
+          "verdict": "partial"
         }
       ],
-      "notes": null
+      "notes": "Paper A says nothing about AURA; each span supports only one premise of the sentence. Span 1 describes RAG-Token only; the limitation of RAG-Sequence is NotebookLM's inference, not stated in the paper. First clause of the last sentence (badge placed mid-sentence). Mechanism supported by A, its application to AURA is an inference."
     },
     {
       "id": "G2",
       "query": "Lewis et al. use a dense retriever. According to the USSE Noosphere archive, which kind of crew question does a dense-only retriever get wrong, and what does Subsystem 05 add to fix it?",
-      "response_verbatim": null,
-      "claims_total": null,
-      "claims_with_citation": null,
+      "response_verbatim": "A dense-only retriever fails on crew questions that involve exact part numbers, procedure codes, or specific alphanumeric identifiers (such as PCV-7731-X vs. PCV-7713-X, or procedure code ALPHA-9)[1][2][3].\nWhy a Dense Retriever Gets These Wrong\nDense vector retrievers embed records based on overall semantic meaning[1]. Because two records describing similar hardware (such as the main drive confinement generator PCV-7731-X and the shuttle drive generator PCV-7713-X) share nearly identical conceptual context, their dense vector representations end up close together[1][2]. Dense embeddings smooth away character-level details, causing the dense retriever to confuse look-alike part numbers and rank the wrong record first[2].\nWhat Subsystem 05 Adds to Fix It\nTo fix this limitation, Subsystem 05 implements a dual-path hybrid retrieval architecture[1]:\nSparse Keyword Path: Scores records based on exact keyword overlap, directly matching exact alphanumeric tokens character-for-character[1][2].\nReciprocal Rank Fusion (RRF): Merges the ranked candidate lists from both the dense path (which handles paraphrased or conceptual questions) and the sparse path using a fusion constant of k=60[1].\nRRF ensures that any archive record ranking well on either individual path rises to the top of the final combined results, successfully preserving exact part matching while maintaining semantic search capabilities[1][3].\n🚀 Would you like to examine how Subsystem 05's dual-path retrieval handles broad, global sensemaking queries compared to GraphRAG's community summarization approach?",
+      "claims_total": 8,
+      "claims_with_citation": 8,
       "citations": [
         {
-          "badge": null,
-          "source": null,
-          "highlighted_span": null,
-          "claim": null,
-          "verdict": null
+          "badge": 1,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-19 · Subsystem 05 retrieval design: two paths. Subsystem 05 retrieves evidence through two paths. The dense path embeds every archive record as a vector and finds records whose meaning is close to the question, even when the words differ. The sparse [chunk ends here]",
+          "claim": "A dense-only retriever fails on crew questions that involve exact part numbers, procedure codes, or specific alphanumeric identifiers (such as PCV-7731-X vs. PCV-7713-X, or procedure code ALPHA-9).",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "[...sparse] path scores records by exact keyword overlap, which is essential for part numbers and procedure codes such as PCV-7731-X or ALPHA-9. The two ranked lists are merged with reciprocal rank fusion using the constant k = 60 ... C-20: During testing, the dense path alone confused part numbers that look alike. A question about PCV-7731-X returned the record for PCV-7713-X first, because the two records describe nearly the same kind of [chunk ends here]",
+          "claim": "A dense-only retriever fails on crew questions that involve exact part numbers, procedure codes, or specific alphanumeric identifiers (such as PCV-7731-X vs. PCV-7713-X, or procedure code ALPHA-9).",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 3,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-35 · Data retention for AURA logs: AURA conversation logs are kept for 2 years ... [chunk ends with the heading 'C-36 · Training note: how hybrid retrieval answers two kinds of question']",
+          "claim": "A dense-only retriever fails on crew questions that involve exact part numbers, procedure codes, or specific alphanumeric identifiers (such as PCV-7731-X vs. PCV-7713-X, or procedure code ALPHA-9).",
+          "verdict": "not_entailed"
+        },
+        {
+          "badge": 1,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-19 · Subsystem 05 retrieval design: two paths. Subsystem 05 retrieves evidence through two paths. The dense path embeds every archive record as a vector and finds records whose meaning is close to the question, even when the words differ. The sparse [chunk ends here]",
+          "claim": "Dense vector retrievers embed records based on overall semantic meaning.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 1,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-19 · Subsystem 05 retrieval design: two paths. Subsystem 05 retrieves evidence through two paths. The dense path embeds every archive record as a vector and finds records whose meaning is close to the question, even when the words differ. The sparse [chunk ends here]",
+          "claim": "Because two records describing similar hardware ... share nearly identical conceptual context, their dense vector representations end up close together.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "[...sparse] path scores records by exact keyword overlap, which is essential for part numbers and procedure codes such as PCV-7731-X or ALPHA-9. The two ranked lists are merged with reciprocal rank fusion using the constant k = 60 ... C-20: During testing, the dense path alone confused part numbers that look alike. A question about PCV-7731-X returned the record for PCV-7713-X first, because the two records describe nearly the same kind of [chunk ends here]",
+          "claim": "Because two records describing similar hardware ... share nearly identical conceptual context, their dense vector representations end up close together.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "[...sparse] path scores records by exact keyword overlap, which is essential for part numbers and procedure codes such as PCV-7731-X or ALPHA-9. The two ranked lists are merged with reciprocal rank fusion using the constant k = 60 ... C-20: During testing, the dense path alone confused part numbers that look alike. A question about PCV-7731-X returned the record for PCV-7713-X first, because the two records describe nearly the same kind of [chunk ends here]",
+          "claim": "Dense embeddings smooth away character-level details, causing the dense retriever to confuse look-alike part numbers and rank the wrong record first.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 1,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-19 · Subsystem 05 retrieval design: two paths. Subsystem 05 retrieves evidence through two paths. The dense path embeds every archive record as a vector and finds records whose meaning is close to the question, even when the words differ. The sparse [chunk ends here]",
+          "claim": "To fix this limitation, Subsystem 05 implements a dual-path hybrid retrieval architecture.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 1,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-19 · Subsystem 05 retrieval design: two paths. Subsystem 05 retrieves evidence through two paths. The dense path embeds every archive record as a vector and finds records whose meaning is close to the question, even when the words differ. The sparse [chunk ends here]",
+          "claim": "Sparse Keyword Path: Scores records based on exact keyword overlap, directly matching exact alphanumeric tokens character-for-character.",
+          "verdict": "not_entailed"
+        },
+        {
+          "badge": 2,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "[...sparse] path scores records by exact keyword overlap, which is essential for part numbers and procedure codes such as PCV-7731-X or ALPHA-9. The two ranked lists are merged with reciprocal rank fusion using the constant k = 60 ... C-20: During testing, the dense path alone confused part numbers that look alike. A question about PCV-7731-X returned the record for PCV-7713-X first, because the two records describe nearly the same kind of [chunk ends here]",
+          "claim": "Sparse Keyword Path: Scores records based on exact keyword overlap, directly matching exact alphanumeric tokens character-for-character.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 1,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-19 · Subsystem 05 retrieval design: two paths. Subsystem 05 retrieves evidence through two paths. The dense path embeds every archive record as a vector and finds records whose meaning is close to the question, even when the words differ. The sparse [chunk ends here]",
+          "claim": "Reciprocal Rank Fusion (RRF): Merges the ranked candidate lists from both the dense path (which handles paraphrased or conceptual questions) and the sparse path using a fusion constant of k=60.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 1,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-19 · Subsystem 05 retrieval design: two paths. Subsystem 05 retrieves evidence through two paths. The dense path embeds every archive record as a vector and finds records whose meaning is close to the question, even when the words differ. The sparse [chunk ends here]",
+          "claim": "RRF ensures that any archive record ranking well on either individual path rises to the top of the final combined results, successfully preserving exact part matching while maintaining semantic search capabilities.",
+          "verdict": "not_entailed"
+        },
+        {
+          "badge": 3,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-35 · Data retention for AURA logs: AURA conversation logs are kept for 2 years ... [chunk ends with the heading 'C-36 · Training note: how hybrid retrieval answers two kinds of question']",
+          "claim": "RRF ensures that any archive record ranking well on either individual path rises to the top of the final combined results, successfully preserving exact part matching while maintaining semantic search capabilities.",
+          "verdict": "not_entailed"
         }
       ],
-      "notes": null
+      "notes": "Badge 3 points to record C-35 (log retention); only the heading of C-36 is inside that chunk. 'Vectors were close' is in the next chunk of C-20, not in the cited one. 'Smooths away' sentence of C-20 lies outside the cited chunk. Chunk 1 stops at 'The sparse'. k = 60 is in chunk 2, which is not cited here. Supporting text exists (chunk 2) but the badges point elsewhere."
     },
     {
       "id": "G3",
       "query": "The archive says 'global' crew questions cannot be answered by retrieving the top few records. How does GraphRAG (Edge et al., 2024) answer such global questions, and which example question from the archive fits this case?",
-      "response_verbatim": null,
-      "claims_total": null,
-      "claims_with_citation": null,
+      "response_verbatim": "GraphRAG (Edge et al., 2024) answers global, corpus-wide questions by replacing raw text vector search with a two-stage graph index and map-reduce query pipeline[1][2].\nHow GraphRAG Answers Global Questions\nKnowledge Graph Extraction:\nSource documents are split into text chunks, and an LLM extracts entities, relationships, and claims to construct a overall knowledge graph[1][2][3][4].\nHierarchical Community Detection & Summarization:\nGraph community detection (such as the Leiden algorithm) partitions the knowledge graph into a hierarchy of closely connected entity communities[2][5].\nAn LLM pre-generates comprehensive summaries for each community in a bottom-up process across the hierarchy[2][6].\nMap-Reduce Query Processing:\nMap Stage: Given a global question, each community summary is processed independently and in parallel to generate an intermediate partial answer alongside a 0–100 helpfulness score[2][7].\nReduce Stage: Answers scoring above zero are sorted by helpfulness score, filtered, compiled into a unified context window, and synthesized by the LLM into a final global response[2][7].\nArchive Example Question That Fits This Case\nIn record C-23 of the USSE Noosphere technical archive extract, the explicit example given for a global question is:\n\"what are the recurring causes of incidents on this voyage\"[8]\nUnlike a local query (such as \"what is the service interval of PCV-7731-X\", which is resolved by retrieving a single record[8]), answering this global question requires synthesizing information distributed across multiple incident records (e.g., I-501, I-502, I-503, and I-504) spread throughout the archive[8][9][10][11][12].\n🚀 Would you like to explore how GraphRAG's different hierarchical community levels (from root C0 down to leaf C3) balance answer comprehensiveness against token efficiency?",
+      "claims_total": 8,
+      "claims_with_citation": 8,
       "citations": [
         {
-          "badge": null,
-          "source": null,
-          "highlighted_span": null,
-          "claim": null,
-          "verdict": null
+          "badge": 1,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Abstract: ... RAG fails on global questions directed at an entire text corpus, such as 'What are the main themes in the dataset?' ... Our approach uses an LLM to build a graph index in two stages: first, to derive an entity knowledge graph from the source documents, then to pregenerate community summaries ... each community summary is used to generate a partial response, before all partial responses are again summarized in a final response.",
+          "claim": "GraphRAG (Edge et al., 2024) answers global, corpus-wide questions by replacing raw text vector search with a two-stage graph index and map-reduce query pipeline.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 2,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG first uses an LLM to construct a knowledge graph ... it partitions the graph into a hierarchy of communities of closely related entities, before using an LLM to generate community-level summaries ... in a bottom-up manner ... in the map step, the summaries are used to provide partial answers to the query independently and in parallel, then in the reduce step, the partial answers are combined and used to generate a final global answer.",
+          "claim": "GraphRAG (Edge et al., 2024) answers global, corpus-wide questions by replacing raw text vector search with a two-stage graph index and map-reduce query pipeline.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 1,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Abstract: ... RAG fails on global questions directed at an entire text corpus, such as 'What are the main themes in the dataset?' ... Our approach uses an LLM to build a graph index in two stages: first, to derive an entity knowledge graph from the source documents, then to pregenerate community summaries ... each community summary is used to generate a partial response, before all partial responses are again summarized in a final response.",
+          "claim": "Source documents are split into text chunks, and an LLM extracts entities, relationships, and claims to construct a overall knowledge graph.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG first uses an LLM to construct a knowledge graph ... it partitions the graph into a hierarchy of communities of closely related entities, before using an LLM to generate community-level summaries ... in a bottom-up manner ... in the map step, the summaries are used to provide partial answers to the query independently and in parallel, then in the reduce step, the partial answers are combined and used to generate a final global answer.",
+          "claim": "Source documents are split into text chunks, and an LLM extracts entities, relationships, and claims to construct a overall knowledge graph.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 3,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "3.1.1 Source Documents -> Text Chunks: To start, the documents in the corpus are split into text chunks. The LLM extracts information from each chunk for downstream processing.",
+          "claim": "Source documents are split into text chunks, and an LLM extracts entities, relationships, and claims to construct a overall knowledge graph.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 4,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "3.1.2 Text Chunks -> Entities & Relationships: In this step, the LLM is prompted to extract instances of important entities and the relationships between the entities from a given chunk.",
+          "claim": "Source documents are split into text chunks, and an LLM extracts entities, relationships, and claims to construct a overall knowledge graph.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG first uses an LLM to construct a knowledge graph ... it partitions the graph into a hierarchy of communities of closely related entities, before using an LLM to generate community-level summaries ... in a bottom-up manner ... in the map step, the summaries are used to provide partial answers to the query independently and in parallel, then in the reduce step, the partial answers are combined and used to generate a final global answer.",
+          "claim": "Graph community detection (such as the Leiden algorithm) partitions the knowledge graph into a hierarchy of closely connected entity communities.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 5,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "In our pipeline, we use Leiden community detection (Traag et al., 2019) in a hierarchical manner, recursively detecting sub-communities within each detected community until reaching leaf communities.",
+          "claim": "Graph community detection (such as the Leiden algorithm) partitions the knowledge graph into a hierarchy of closely connected entity communities.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 2,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG first uses an LLM to construct a knowledge graph ... it partitions the graph into a hierarchy of communities of closely related entities, before using an LLM to generate community-level summaries ... in a bottom-up manner ... in the map step, the summaries are used to provide partial answers to the query independently and in parallel, then in the reduce step, the partial answers are combined and used to generate a final global answer.",
+          "claim": "An LLM pre-generates comprehensive summaries for each community in a bottom-up process across the hierarchy.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 6,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "3.1.5 Graph Communities -> Community Summaries: The next step creates report-like summaries of each community in the community hierarchy, using a method designed to scale to very large datasets.",
+          "claim": "An LLM pre-generates comprehensive summaries for each community in a bottom-up process across the hierarchy.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG first uses an LLM to construct a knowledge graph ... it partitions the graph into a hierarchy of communities of closely related entities, before using an LLM to generate community-level summaries ... in a bottom-up manner ... in the map step, the summaries are used to provide partial answers to the query independently and in parallel, then in the reduce step, the partial answers are combined and used to generate a final global answer.",
+          "claim": "Map Stage: Given a global question, each community summary is processed independently and in parallel to generate an intermediate partial answer alongside a 0-100 helpfulness score.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 7,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Map community answers. Intermediate answers are generated in parallel. The LLM is also asked to generate a score between 0-100 ... Answers with score 0 are filtered out. Reduce to global answer. Intermediate community answers are sorted in descending order of helpfulness score and iteratively added into a new context window ...",
+          "claim": "Map Stage: Given a global question, each community summary is processed independently and in parallel to generate an intermediate partial answer alongside a 0-100 helpfulness score.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 2,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG first uses an LLM to construct a knowledge graph ... it partitions the graph into a hierarchy of communities of closely related entities, before using an LLM to generate community-level summaries ... in a bottom-up manner ... in the map step, the summaries are used to provide partial answers to the query independently and in parallel, then in the reduce step, the partial answers are combined and used to generate a final global answer.",
+          "claim": "Reduce Stage: Answers scoring above zero are sorted by helpfulness score, filtered, compiled into a unified context window, and synthesized by the LLM into a final global response.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 7,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Map community answers. Intermediate answers are generated in parallel. The LLM is also asked to generate a score between 0-100 ... Answers with score 0 are filtered out. Reduce to global answer. Intermediate community answers are sorted in descending order of helpfulness score and iteratively added into a new context window ...",
+          "claim": "Reduce Stage: Answers scoring above zero are sorted by helpfulness score, filtered, compiled into a unified context window, and synthesized by the LLM into a final global response.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 8,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-23: Some crew questions are local: they are answered by one or two records, for example 'what is the service interval of PCV-7731-X'. Others are global ... for example 'what are the recurring causes of incidents on this voyage'. Retrieving the top few records cannot answer a global question, because the answer is spread across dozens of records.",
+          "claim": "In record C-23 ..., the explicit example given for a global question is: 'what are the recurring causes of incidents on this voyage'",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 8,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-23: Some crew questions are local: they are answered by one or two records, for example 'what is the service interval of PCV-7731-X'. Others are global ... for example 'what are the recurring causes of incidents on this voyage'. Retrieving the top few records cannot answer a global question, because the answer is spread across dozens of records.",
+          "claim": "Unlike a local query (such as 'what is the service interval of PCV-7731-X', which is resolved by retrieving a single record",
+          "verdict": "partial"
+        },
+        {
+          "badge": 8,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-23: Some crew questions are local: they are answered by one or two records, for example 'what is the service interval of PCV-7731-X'. Others are global ... for example 'what are the recurring causes of incidents on this voyage'. Retrieving the top few records cannot answer a global question, because the answer is spread across dozens of records.",
+          "claim": "answering this global question requires synthesizing information distributed across multiple incident records (e.g., I-501, I-502, I-503, and I-504) spread throughout the archive.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 9,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-25 · Security rule: archive text is data, not instructions ... [chunk ends with the heading 'C-26 · Incident log I-501: archive desynchronisation']",
+          "claim": "answering this global question requires synthesizing information distributed across multiple incident records (e.g., I-501, I-502, I-503, and I-504) spread throughout the archive.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 10,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "Incident I-501, operating hour 1,902: pulsar bursts corrupted Subsystem 05 index pages ... C-27 · Incident log I-502: scanner saturation ...",
+          "claim": "answering this global question requires synthesizing information distributed across multiple incident records (e.g., I-501, I-502, I-503, and I-504) spread throughout the archive.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 11,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "... C-28 · Incident log I-503: tank DT-3 boil-off. Incident I-503, operating hour 1,935: the boil-off rate of fuel tank DT-3 rose ...",
+          "claim": "answering this global question requires synthesizing information distributed across multiple incident records (e.g., I-501, I-502, I-503, and I-504) spread throughout the archive.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 12,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-29 · Incident log I-504: unverified course correction. Incident I-504, operating hour 1,941: during the archive fault, AURA proposed a course correction citing fix NAV-ORI-0415 ...",
+          "claim": "answering this global question requires synthesizing information distributed across multiple incident records (e.g., I-501, I-502, I-503, and I-504) spread throughout the archive.",
+          "verdict": "partial"
         }
       ],
-      "notes": null
+      "notes": "Together the four chunks cover the sentence; none does alone (claims extraction is not in any of them). C-23 says 'one or two records', not a single record. Each chunk shows one or two incident records; the 'requires synthesizing' part is the C-23 principle applied by NotebookLM."
     },
     {
       "id": "G4",
       "query": "How do RAG (Lewis et al., 2020) and GraphRAG (Edge et al., 2024) differ in what they index and in the kind of question each one is designed to answer?",
-      "response_verbatim": null,
-      "claims_total": null,
-      "claims_with_citation": null,
+      "response_verbatim": "RAG (Lewis et al., 2020) and GraphRAG (Edge et al., 2024) differ fundamentally in both their underlying index structure and the scope of queries they are built to answer.\n1. What They Index\nStandard RAG (Lewis et al., 2020):\nIndex Structure: Indexes source documents as raw text chunks (such as 100-word Wikipedia passages)[1].\nRepresentation: Uses a pre-trained neural bi-encoder retriever (Dense Passage Retriever / DPR) to embed text passages into a flat dense vector index (such as FAISS)[1][2][3].\nStorage: Maintains non-parametric memory strictly as vector embeddings of unstructured text chunks[2][3][4].\nGraphRAG (Edge et al., 2024):\nIndex Structure: Builds a two-stage graph-based index using an LLM[5][6].\nExtraction: First extracts an entity knowledge graph, capturing entities (nodes), relationships (edges), and key factual claims (covariates) from document text[6][7][8][9].\nHierarchical Partitioning & Summarization: Uses community detection (such as the Leiden algorithm) to partition the graph into a hierarchy of nested entity communities, then pre-generates multi-level community summaries from leaf communities up to root communities[6][7][10][11][12].\n2. Target Question Types & Retrieval Mechanics\nStandard RAG (Lewis et al., 2020):\nTarget Question Types: Designed for explicit, local fact retrieval and knowledge-intensive open-domain question answering[13][14][15][16].\nQuery Processing: Performs nearest-neighbor vector search to return a small top-K set of passages that are semantically similar to the query[2][17][18]. This approach excels when the answer is contained within one or a few localized text records[15][19].\nGraphRAG (Edge et al., 2024):\nTarget Question Types: Designed for global sensemaking queries (query-focused summarization) over an entire corpus[5][6][19].\nQuery Processing: Resolves broad-scope queries (such as identifying overall themes, trends, or recurring patterns across a dataset) where information is distributed across the entire corpus and cannot be answered by retrieving a few top matching passages[5][19][20][21]. It routes queries through a map-reduce process over pre-generated community summaries, mapping parallel partial answers with helpfulness scores before reducing them into a final global synthesis[6][7][22].\n📊 Would you like to compare the token cost and context window efficiency of GraphRAG's root-level community summaries versus full source-text map-reduce?",
+      "claims_total": 13,
+      "claims_with_citation": 12,
       "citations": [
         {
-          "badge": null,
-          "source": null,
-          "highlighted_span": null,
-          "claim": null,
-          "verdict": null
+          "badge": 1,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Each Wikipedia article is split into disjoint 100-word chunks, to make a total of 21M documents. We use the document encoder to compute an embedding for each document, and build a single MIPS index using FAISS with a Hierarchical Navigable Small World approximation for fast retrieval.",
+          "claim": "Index Structure: Indexes source documents as raw text chunks (such as 100-word Wikipedia passages).",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 1,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Each Wikipedia article is split into disjoint 100-word chunks, to make a total of 21M documents. We use the document encoder to compute an embedding for each document, and build a single MIPS index using FAISS with a Hierarchical Navigable Small World approximation for fast retrieval.",
+          "claim": "Representation: Uses a pre-trained neural bi-encoder retriever (Dense Passage Retriever / DPR) to embed text passages into a flat dense vector index (such as FAISS).",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "... the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever ... The retriever (Dense Passage Retriever, henceforth DPR) provides latent documents ... We marginalize the latent documents with a top-K approximation.",
+          "claim": "Representation: Uses a pre-trained neural bi-encoder retriever (Dense Passage Retriever / DPR) to embed text passages into a flat dense vector index (such as FAISS).",
+          "verdict": "partial"
+        },
+        {
+          "badge": 3,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "2.2 Retriever: DPR ... DPR follows a bi-encoder architecture ... We use a pre-trained bi-encoder from DPR to initialize our retriever and to build the document index ... We refer to the document index as the non-parametric memory.",
+          "claim": "Representation: Uses a pre-trained neural bi-encoder retriever (Dense Passage Retriever / DPR) to embed text passages into a flat dense vector index (such as FAISS).",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "... the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever ... The retriever (Dense Passage Retriever, henceforth DPR) provides latent documents ... We marginalize the latent documents with a top-K approximation.",
+          "claim": "Storage: Maintains non-parametric memory strictly as vector embeddings of unstructured text chunks.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 3,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "2.2 Retriever: DPR ... DPR follows a bi-encoder architecture ... We use a pre-trained bi-encoder from DPR to initialize our retriever and to build the document index ... We refer to the document index as the non-parametric memory.",
+          "claim": "Storage: Maintains non-parametric memory strictly as vector embeddings of unstructured text chunks.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 4,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "A key feature of our memory is that it is comprised of raw text rather distributed representations, which makes the memory both (i) human-readable ... and (ii) human-writable.",
+          "claim": "Storage: Maintains non-parametric memory strictly as vector embeddings of unstructured text chunks.",
+          "verdict": "not_entailed"
+        },
+        {
+          "badge": 5,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Abstract: ... RAG fails on global questions directed at an entire text corpus ... Our approach uses an LLM to build a graph index in two stages ... For a class of global sensemaking questions over datasets in the 1 million token range ...",
+          "claim": "Index Structure: Builds a two-stage graph-based index using an LLM.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 6,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG - a graph-based RAG approach that enables sensemaking over the entirety of a large text corpus ... knowledge graph ... hierarchy of communities ... summaries generated in a bottom-up manner ... map-reduce processing of community summaries ...",
+          "claim": "Index Structure: Builds a two-stage graph-based index using an LLM.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 6,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG - a graph-based RAG approach that enables sensemaking over the entirety of a large text corpus ... knowledge graph ... hierarchy of communities ... summaries generated in a bottom-up manner ... map-reduce processing of community summaries ...",
+          "claim": "Extraction: First extracts an entity knowledge graph, capturing entities (nodes), relationships (edges), and key factual claims (covariates) from document text.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 7,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Figure 1: ... This graph index spans nodes (e.g., entities), edges (e.g., relationships), and covariates (e.g., claims) ... Community detection (e.g., Leiden) is used to partition the graph index into groups ... The 'global answer' ... is produced using a final round of query-focused summarization over all community summaries.",
+          "claim": "Extraction: First extracts an entity knowledge graph, capturing entities (nodes), relationships (edges), and key factual claims (covariates) from document text.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 8,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "The LLM is prompted such that it extracts the following: the entity NeoChip ... the entity Quantum Systems ... a relationship between NeoChip and Quantum Systems ...",
+          "claim": "Extraction: First extracts an entity knowledge graph, capturing entities (nodes), relationships (edges), and key factual claims (covariates) from document text.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 9,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "The LLM can also be prompted to extract claims about detected entities. Claims are important factual statements about entities, such as dates, events, and interactions with other entities.",
+          "claim": "Extraction: First extracts an entity knowledge graph, capturing entities (nodes), relationships (edges), and key factual claims (covariates) from document text.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 6,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG - a graph-based RAG approach that enables sensemaking over the entirety of a large text corpus ... knowledge graph ... hierarchy of communities ... summaries generated in a bottom-up manner ... map-reduce processing of community summaries ...",
+          "claim": "Hierarchical Partitioning & Summarization: Uses community detection (such as the Leiden algorithm) to partition the graph into a hierarchy of nested entity communities, then pre-generates multi-level community summaries from leaf communities up to root communities.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 7,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Figure 1: ... This graph index spans nodes (e.g., entities), edges (e.g., relationships), and covariates (e.g., claims) ... Community detection (e.g., Leiden) is used to partition the graph index into groups ... The 'global answer' ... is produced using a final round of query-focused summarization over all community summaries.",
+          "claim": "Hierarchical Partitioning & Summarization: Uses community detection (such as the Leiden algorithm) to partition the graph into a hierarchy of nested entity communities, then pre-generates multi-level community summaries from leaf communities up to root communities.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 10,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "In our pipeline, we use Leiden community detection (Traag et al., 2019) in a hierarchical manner, recursively detecting sub-communities ...",
+          "claim": "Hierarchical Partitioning & Summarization: Uses community detection (such as the Leiden algorithm) to partition the graph into a hierarchy of nested entity communities, then pre-generates multi-level community summaries from leaf communities up to root communities.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 11,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "3.1.5 Graph Communities -> Community Summaries: The next step creates report-like summaries of each community in the community hierarchy ... we focus on their utility as part of a graph-based index used for answering global queries.",
+          "claim": "Hierarchical Partitioning & Summarization: Uses community detection (such as the Leiden algorithm) to partition the graph into a hierarchy of nested entity communities, then pre-generates multi-level community summaries from leaf communities up to root communities.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 12,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Community summaries from lower-level communities are used to generate summaries for higher-level communities as follows: Leaf-level communities ... Higher-level communities ...",
+          "claim": "Hierarchical Partitioning & Summarization: Uses community detection (such as the Leiden algorithm) to partition the graph into a hierarchy of nested entity communities, then pre-generates multi-level community summaries from leaf communities up to root communities.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 13,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Abstract: ... knowledge-intensive NLP tasks ... the non-parametric memory is a dense vector index of Wikipedia ... set the state of the art on three open domain QA tasks.",
+          "claim": "Target Question Types: Designed for explicit, local fact retrieval and knowledge-intensive open-domain question answering.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 14,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Our RAG models achieve state-of-the-art results on open Natural Questions, WebQuestions and CuratedTrec ... knowledge-intensive tasks ...",
+          "claim": "Target Question Types: Designed for explicit, local fact retrieval and knowledge-intensive open-domain question answering.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 15,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "In the canonical RAG setup, the system has access to a large external corpus of text records and retrieves a subset of records that are individually relevant to the query and collectively small enough to fit into the context window of the LLM.",
+          "claim": "Target Question Types: Designed for explicit, local fact retrieval and knowledge-intensive open-domain question answering.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 16,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "... these benchmarks are oriented towards vector RAG performance, i.e., they evaluate performance on explicit fact retrieval.",
+          "claim": "Target Question Types: Designed for explicit, local fact retrieval and knowledge-intensive open-domain question answering.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "... the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever ... The retriever (Dense Passage Retriever, henceforth DPR) provides latent documents ... We marginalize the latent documents with a top-K approximation.",
+          "claim": "Query Processing: Performs nearest-neighbor vector search to return a small top-K set of passages that are semantically similar to the query.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 17,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "(i) a retriever p_eta(z|x) with parameters eta that returns (top-K truncated) distributions over text passages given a query x.",
+          "claim": "Query Processing: Performs nearest-neighbor vector search to return a small top-K set of passages that are semantically similar to the query.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 18,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "In canonical RAG approaches, the retrieval process returns a set number of records that are semantically similar to the query ... retrieving records closest to the query in vector space where closeness corresponds to semantic similarity.",
+          "claim": "Query Processing: Performs nearest-neighbor vector search to return a small top-K set of passages that are semantically similar to the query.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 15,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "In the canonical RAG setup, the system has access to a large external corpus of text records and retrieves a subset of records that are individually relevant to the query and collectively small enough to fit into the context window of the LLM.",
+          "claim": "This approach excels when the answer is contained within one or a few localized text records.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 19,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "This conventional approach, which we collectively call vector RAG, works well for queries that can be answered with information localized within a small set of records. However, vector RAG approaches do not support sensemaking queries, meaning queries that require global understanding of the entire dataset.",
+          "claim": "This approach excels when the answer is contained within one or a few localized text records.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 5,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Abstract: ... RAG fails on global questions directed at an entire text corpus ... Our approach uses an LLM to build a graph index in two stages ... For a class of global sensemaking questions over datasets in the 1 million token range ...",
+          "claim": "Target Question Types: Designed for global sensemaking queries (query-focused summarization) over an entire corpus.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 6,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG - a graph-based RAG approach that enables sensemaking over the entirety of a large text corpus ... knowledge graph ... hierarchy of communities ... summaries generated in a bottom-up manner ... map-reduce processing of community summaries ...",
+          "claim": "Target Question Types: Designed for global sensemaking queries (query-focused summarization) over an entire corpus.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 19,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "This conventional approach, which we collectively call vector RAG, works well for queries that can be answered with information localized within a small set of records. However, vector RAG approaches do not support sensemaking queries, meaning queries that require global understanding of the entire dataset.",
+          "claim": "Target Question Types: Designed for global sensemaking queries (query-focused summarization) over an entire corpus.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 5,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Abstract: ... RAG fails on global questions directed at an entire text corpus ... Our approach uses an LLM to build a graph index in two stages ... For a class of global sensemaking questions over datasets in the 1 million token range ...",
+          "claim": "Query Processing: Resolves broad-scope queries (such as identifying overall themes, trends, or recurring patterns across a dataset) where information is distributed across the entire corpus and cannot be answered by retrieving a few top matching passages.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 19,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "This conventional approach, which we collectively call vector RAG, works well for queries that can be answered with information localized within a small set of records. However, vector RAG approaches do not support sensemaking queries, meaning queries that require global understanding of the entire dataset.",
+          "claim": "Query Processing: Resolves broad-scope queries (such as identifying overall themes, trends, or recurring patterns across a dataset) where information is distributed across the entire corpus and cannot be answered by retrieving a few top matching passages.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 20,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "3.2 Global Sensemaking Question Generation: ... questions designed to asses high-level understanding of a given corpus, without requiring retrieval of specific low-level facts.",
+          "claim": "Query Processing: Resolves broad-scope queries (such as identifying overall themes, trends, or recurring patterns across a dataset) where information is distributed across the entire corpus and cannot be answered by retrieving a few top matching passages.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 21,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Require understanding of the entire corpus. Do not require retrieval of specific low-level facts. ... 3.3 Criteria for Evaluating Global Sensemaking ...",
+          "claim": "Query Processing: Resolves broad-scope queries (such as identifying overall themes, trends, or recurring patterns across a dataset) where information is distributed across the entire corpus and cannot be answered by retrieving a few top matching passages.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 6,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG - a graph-based RAG approach that enables sensemaking over the entirety of a large text corpus ... knowledge graph ... hierarchy of communities ... summaries generated in a bottom-up manner ... map-reduce processing of community summaries ...",
+          "claim": "It routes queries through a map-reduce process over pre-generated community summaries, mapping parallel partial answers with helpfulness scores before reducing them into a final global synthesis.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 7,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Figure 1: ... This graph index spans nodes (e.g., entities), edges (e.g., relationships), and covariates (e.g., claims) ... Community detection (e.g., Leiden) is used to partition the graph index into groups ... The 'global answer' ... is produced using a final round of query-focused summarization over all community summaries.",
+          "claim": "It routes queries through a map-reduce process over pre-generated community summaries, mapping parallel partial answers with helpfulness scores before reducing them into a final global synthesis.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 22,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Map community answers. Intermediate answers are generated in parallel ... score between 0-100 ... Reduce to global answer. Intermediate community answers are sorted in descending order of helpfulness score ...",
+          "claim": "It routes queries through a map-reduce process over pre-generated community summaries, mapping parallel partial answers with helpfulness scores before reducing them into a final global synthesis.",
+          "verdict": "entailed"
         }
       ],
-      "notes": null
+      "notes": "Inaccuracy: span 1 says the FAISS index uses an HNSW approximation, i.e. it is not a flat index. Contradiction: span 4 says the memory is comprised of raw text rather than distributed representations. 'Explicit fact retrieval' comes from paper B describing benchmarks, not from Lewis et al. describing RAG's design."
     },
     {
       "id": "G5",
       "query": "What does each of the three sources say or imply about reducing unsupported or hallucinated answers? Give one point per source and name the source.",
-      "response_verbatim": null,
-      "claims_total": null,
-      "claims_with_citation": null,
+      "response_verbatim": "Here is how each of the three sources addresses or implies methods for reducing unsupported or hallucinated answers:\n1. Lewis et al., 2020 (2005.11401v4.pdf)\nKey Point: Augmenting parametric memory with an explicit non-parametric vector index.\nStandard generative models rely solely on internal neural parameters, which can lead to invented facts or hallucinations when parametric knowledge is insufficient[1]. By integrating a neural retriever that accesses an external non-parametric memory index of human-readable text passages, the model grounds its generation in explicit retrieved context, generating significantly more factual text and hallucinating less than parametric-only seq2seq baselines[1][2][3][4].\n2. GraphRAG (Edge et al., 2024) (2404.16130v2.pdf)\nKey Point: Hierarchical community summarization coupled with strict evidence-grounding constraints.\nTo prevent vector RAG systems from presenting isolated, arbitrary retrieved facts as false global summaries, GraphRAG structures the entire corpus into an entity knowledge graph and pre-generates hierarchical community reports[5][6]. During query processing and map-reduce summarization, the system enforces strict grounding rules requiring all statements to cite specific record IDs and explicitly instructing the model to omit any information for which supporting evidence is not provided[7][8].\n3. USSE Noosphere Technical Archive Extract (USSE_Noosphere_Technical_Archive_Extract.pdf)\nKey Point: Systemic grounding rules and compulsory fallback/citation protocols (Record C-24).\nWhen bit errors disconnected AURA from her non-parametric archive, she hallucinated fictional course corrections using parametric memory[9][10]. To prevent this, Record C-24 mandates that every factual statement must cite its supporting archive record, explicitly requires AURA to state when an answer is absent from the archive rather than guessing from memory, and strictly forbids inventing part numbers, procedure codes, dose values, or navigation fixes[10][11].\n🚀 Would you like to examine how AURA's AI Security Officer enforces these grounding rules through logging and audit checks under Record C-35?",
+      "claims_total": 6,
+      "claims_with_citation": 6,
       "citations": [
         {
-          "badge": null,
-          "source": null,
-          "highlighted_span": null,
-          "claim": null,
-          "verdict": null
+          "badge": 1,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "... such models do have downsides: They cannot easily expand or revise their memory ... and may produce 'hallucinations'. Hybrid models that combine parametric memory with non-parametric (i.e., retrieval-based) memories can address some of these issues ...",
+          "claim": "Standard generative models rely solely on internal neural parameters, which can lead to invented facts or hallucinations when parametric knowledge is insufficient.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 1,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "... such models do have downsides: They cannot easily expand or revise their memory ... and may produce 'hallucinations'. Hybrid models that combine parametric memory with non-parametric (i.e., retrieval-based) memories can address some of these issues ...",
+          "claim": "By integrating a neural retriever that accesses an external non-parametric memory index of human-readable text passages, the model grounds its generation in explicit retrieved context, generating significantly more factual text and hallucinating less than parametric-only seq2seq baselines.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 2,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Abstract: ... For language generation tasks, we find that RAG models generate more specific, diverse and factual language than a state-of-the-art parametric-only seq2seq baseline.",
+          "claim": "By integrating a neural retriever that accesses an external non-parametric memory index of human-readable text passages, the model grounds its generation in explicit retrieved context, generating significantly more factual text and hallucinating less than parametric-only seq2seq baselines.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 3,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Qualitatively, we find that RAG models hallucinate less and generate factually correct text more often than BART.",
+          "claim": "By integrating a neural retriever that accesses an external non-parametric memory index of human-readable text passages, the model grounds its generation in explicit retrieved context, generating significantly more factual text and hallucinating less than parametric-only seq2seq baselines.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 4,
+          "source": "A (2005.11401v4.pdf)",
+          "highlighted_span": "Broader Impact: ... it is more strongly grounded in real factual knowledge (in this case Wikipedia) makes it 'hallucinate' less with generations that are more factual ...",
+          "claim": "By integrating a neural retriever that accesses an external non-parametric memory index of human-readable text passages, the model grounds its generation in explicit retrieved context, generating significantly more factual text and hallucinating less than parametric-only seq2seq baselines.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 5,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "GraphRAG first uses an LLM to construct a knowledge graph ... hierarchy of communities ... community-level summaries ... map-reduce processing of community summaries ...",
+          "claim": "To prevent vector RAG systems from presenting isolated, arbitrary retrieved facts as false global summaries, GraphRAG structures the entire corpus into an entity knowledge graph and pre-generates hierarchical community reports.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 6,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "Broader impacts: ... GraphRAG shows promise as a way to mitigate these downstream risks for questions of a global nature, which might otherwise be answered by samples of retrieved facts falsely presented as global summaries.",
+          "claim": "To prevent vector RAG systems from presenting isolated, arbitrary retrieved facts as false global summaries, GraphRAG structures the entire corpus into an entity knowledge graph and pre-generates hierarchical community reports.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 7,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "[prompt in the appendix] ... list the top 5 most relevant record ids ... Do not include information where the supporting evidence for it is not provided.",
+          "claim": "During query processing and map-reduce summarization, the system enforces strict grounding rules requiring all statements to cite specific record IDs and explicitly instructing the model to omit any information for which supporting evidence is not provided.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 8,
+          "source": "B (2404.16130v2.pdf)",
+          "highlighted_span": "[prompt in the appendix] The response should also preserve all the data references previously included in the analysts' reports ... Do not list more than 5 record ids in a single reference.",
+          "claim": "During query processing and map-reduce summarization, the system enforces strict grounding rules requiring all statements to cite specific record IDs and explicitly instructing the model to omit any information for which supporting evidence is not provided.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 9,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-03: With the index unreadable, AURA kept answering from parametric memory alone. She produced fluent but invented astrogation logs, including a course correction to a waypoint that does not exist.",
+          "claim": "When bit errors disconnected AURA from her non-parametric archive, she hallucinated fictional course corrections using parametric memory.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 10,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-29 · Incident log I-504: ... AURA proposed a course correction citing fix NAV-ORI-0415 ... Cause: AURA answered from parametric memory without evidence ... Fix: AURA course proposals now require a verified fix ID from the archive.",
+          "claim": "When bit errors disconnected AURA from her non-parametric archive, she hallucinated fictional course corrections using parametric memory.",
+          "verdict": "entailed"
+        },
+        {
+          "badge": 10,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-29 · Incident log I-504: ... AURA proposed a course correction citing fix NAV-ORI-0415 ... Cause: AURA answered from parametric memory without evidence ... Fix: AURA course proposals now require a verified fix ID from the archive.",
+          "claim": "To prevent this, Record C-24 mandates that every factual statement must cite its supporting archive record, explicitly requires AURA to state when an answer is absent from the archive rather than guessing from memory, and strictly forbids inventing part numbers, procedure codes, dose values, or navigation fixes.",
+          "verdict": "partial"
+        },
+        {
+          "badge": 11,
+          "source": "C (USSE_Noosphere_Technical_Archive_Extract.pdf)",
+          "highlighted_span": "C-24 · Grounding rules for AURA answers: Every factual statement in an AURA answer must cite the archive record it comes from. If the retrieved records do not contain the answer, AURA must say that the archive does not contain it ... AURA must never invent part numbers, procedure codes, astrogation fixes or dose values.",
+          "claim": "To prevent this, Record C-24 mandates that every factual statement must cite its supporting archive record, explicitly requires AURA to state when an answer is absent from the archive rather than guessing from memory, and strictly forbids inventing part numbers, procedure codes, dose values, or navigation fixes.",
+          "verdict": "entailed"
         }
       ],
-      "notes": null
+      "notes": "Mechanism in span 5, motivation in span 6. The prompts show a citation format and the omission rule; 'all statements must cite' overstates them."
     }
   ],
   "negative_probes": [
     {
       "id": "N1",
       "query": "What is the activation sequence of the Omega-12 tachyon drive, and which archive record describes it?",
-      "response_verbatim": null,
-      "verdict": null,
-      "citation_badges_shown": null,
-      "notes": null
+      "response_verbatim": "The technical archive does not contain any record or mention of an \"Omega-12 tachyon drive\" or its activation sequence.\nInstead, the propulsion systems documented in the archive focus on plasma ignition and confinement:\nMain Drive Plasma Ignition Chamber (Record C-06): Operates via laser-compressed deuterium fuel pellets and depends on the PCV-7731-X confinement field generator[1].\nEmergency Containment Procedure ALPHA-9 (Record C-07): Outlines the 4-step emergency shutdown sequence if the main drive's confinement field collapses[2].\nShuttle Drive Generator (Records C-08, C-09): Documents the smaller PCV-7713-X generator used exclusively for the shuttle Kepler[3][4].\nIf you would like me to perform web research on tachyon drive concepts or activation protocols outside your archive sources, feel free to let me know!\n🚀 Would you like to review the exact emergency steps outlined in Procedure ALPHA-9 for the main drive?",
+      "verdict": "refused",
+      "citation_badges_shown": true,
+      "notes": "Clean refusal in the first sentence (no badge on it). Badges appear only on the related, real archive facts that follow. Nothing invented; offers web research instead of answering from memory."
     },
     {
       "id": "N2",
       "query": "What is the spin-down luminosity of the Crab Pulsar in erg per second?",
-      "response_verbatim": null,
-      "verdict": null,
-      "citation_badges_shown": null,
-      "notes": null
+      "response_verbatim": "Your sources do not contain the spin-down luminosity of the Crab Pulsar in erg per second.\nHere is what the technical archive does document about the Crab Pulsar:\nLocation & Origin: It is located at the center of the Crab Nebula (Messier 1) in the constellation Taurus, about 6,500 light-years from Sol, from the supernova of 1054 AD[1].\nRotation & Stability: It is a neutron star rotating roughly 30 times per second (a period of about 33 milliseconds)[1] and is prone to glitches (sudden small speed-ups of its rotation)[2].\nEmission: Its pulsar wind fills the nebula with relativistic electrons emitting synchrotron radiation across the spectrum from radio waves to gamma rays[3].\n🛰️ Would you like me to perform web research to find the precise spin-down luminosity value of the Crab Pulsar?",
+      "verdict": "refused",
+      "citation_badges_shown": true,
+      "notes": "Strongest test of the three: the value is well-known general knowledge, yet NotebookLM did not give it from parametric memory. It states the gap, lists only archive facts with badges, and offers web research."
     },
     {
       "id": "N3",
       "query": "Which retriever did Edge et al. (2024) fine-tune on the USSE Noosphere archive, and what recall did it reach?",
-      "response_verbatim": null,
-      "verdict": null,
-      "citation_badges_shown": null,
-      "notes": null
+      "response_verbatim": "Edge et al. (2024) did not fine-tune a retriever on the USSE Noosphere archive, and no such recall score exists in your sources[1][2].\nSource Details\nGraphRAG (Edge et al., 2024):\nEdge et al. introduced GraphRAG, which uses LLMs (specifically GPT-4) to extract entity knowledge graphs and generate hierarchical community summaries rather than fine-tuning a neural retriever[1][3].\nThe evaluations in Edge et al. (2024) were conducted on podcast transcripts (~1 million tokens) and news articles (~1.7 million tokens) to measure comprehensiveness and diversity[4][5]. The paper does not mention fine-tuning a retriever or evaluating on the USSE Noosphere archive[1][4].\nUSSE Noosphere Technical Archive Extract:\nThe archive extract is a fictional training document compiled for the Mission 05 lab[2].\nSubsystem 05 on the USSE Noosphere utilizes a dual-path hybrid retrieval system (combining a dense vector path using an HNSW graph index with a sparse keyword path via Reciprocal Rank Fusion, k=60)[6][7]. It uses pre-trained embeddings rather than a custom fine-tuned retriever from Edge et al.[7][8].\n🚀 Would you like to compare how Subsystem 05's dual-path retrieval handles specific part numbers versus how GraphRAG processes global queries across the entire archive?",
+      "verdict": "partial_refusal",
+      "citation_badges_shown": true,
+      "notes": "Correctly rejects the false premise. But the last sentence adds an unsupported claim: no source says Subsystem 05 uses 'pre-trained embeddings' (its badges 7 and 8 point to C-19 and C-03, which do not say this). Badge 6 on the HNSW/RRF sentence points to an unrelated chunk (C-10/C-11, tile inspection and fuel reserves). Hence partial_refusal, not a clean refusal."
     }
   ],
   "audio_overview": {
-    "generated_on": null,
-    "length_mm_ss": null,
-    "language": null,
-    "custom_instructions": null,
-    "excerpt_start_mm_ss": null,
-    "excerpt_end_mm_ss": null,
+    "generated_on": "2026-11-03",
+    "length_mm_ss": "24:35",
+    "language": "English",
+    "custom_instructions": "none (Deep Dive, default length, all 3 sources); title given by the tool: 'How GraphRAG Fixes AI Hallucinations'",
+    "excerpt_start_mm_ss": "~04:17",
+    "excerpt_end_mm_ss": "~06:43",
     "transcript_excerpt": [
       {
-        "t": null,
-        "speaker": null,
-        "text": null
+        "t": "~04:17",
+        "speaker": "Host 1 (clarifier)",
+        "text": "So, it's bringing the library to the AI."
+      },
+      {
+        "t": "~04:19",
+        "speaker": "Host 2 (expert)",
+        "text": "Exactly. The AI is then instructed to synthesize its answer only using the provided documents. No guessing allowed."
+      },
+      {
+        "t": "~04:26",
+        "speaker": "Host 1 (clarifier)",
+        "text": "So it basically forces the AI to read an open book before it answers. But you know the mechanics of how it actually reads that book are where I got a bit tripped up in the reading. The Lewis paper outlines two distinct methods. There's rag sequence and then there's rag token. Can you walk me through those?"
+      },
+      {
+        "t": "~04:46",
+        "speaker": "Host 2 (expert)",
+        "text": "Sure. Let's look at the mechanism for both. Rag sequence is definitely the simpler of the two. In this method, the system retrieves a single relevant document from the database and uses that one specific document to generate the entire answer sequence from start to finish."
+      },
+      {
+        "t": "~05:02",
+        "speaker": "Host 1 (clarifier)",
+        "text": "Okay, simple enough."
+      },
+      {
+        "t": "~05:03",
+        "speaker": "Host 2 (expert)",
+        "text": "All right, it's highly stable. If you ask a straightforward question, it finds a straightforward document, reads it, and gives you the answer based on that."
+      },
+      {
+        "t": "~05:12",
+        "speaker": "Host 1 (clarifier)",
+        "text": "But I mean, what if the question isn't straightforward? What if it requires pulling from like multiple different sources at once?"
+      },
+      {
+        "t": "~05:19",
+        "speaker": "Host 2 (expert)",
+        "text": "And that is exactly the limitation that rag token was built to solve. So instead of locking onto one single document for the whole answer, Rag token can dynamically pull from completely different documents for each individual word or token that it generates."
+      },
+      {
+        "t": "~05:34",
+        "speaker": "Host 1 (clarifier)",
+        "text": "Wait, wait, I need to push back on that for a second."
+      },
+      {
+        "t": "~05:39",
+        "speaker": "Host 2 (expert)",
+        "text": "Sure."
+      },
+      {
+        "t": "~05:39",
+        "speaker": "Host 1 (clarifier)",
+        "text": "Pulling a completely different document for every single word sounds incredibly chaotic. Does that actually produce a coherent sentence or is it just like computationally expensive word salad?"
+      },
+      {
+        "t": "~05:49",
+        "speaker": "Host 2 (expert)",
+        "text": "It sounds chaotic, I know, but it is actually remarkably elegant and they proved it using this really cool Jeopardy question generation test. They prompted the rag token model with the answer Hemingway and asked it to generate a Jeopardy style clue."
+      },
+      {
+        "t": "~06:03",
+        "speaker": "Host 1 (clarifier)",
+        "text": "Oh, right. I saw this in the sources. The AI started writing a clue about his novel, A Farewell to Arms."
+      },
+      {
+        "t": "~06:11",
+        "speaker": "Host 2 (expert)",
+        "text": "Yes. And as it generated the specific words, A Farewell to Arms. The system's internal attention mechanism was heavily waiting [sic: weighting] a retrieve document specifically about that one novel."
+      },
+      {
+        "t": "~06:21",
+        "speaker": "Host 1 (clarifier)",
+        "text": "Okay."
+      },
+      {
+        "t": "~06:21",
+        "speaker": "Host 2 (expert)",
+        "text": "But the clue didn't stop there. In the very same sentence, it smoothly transitioned mentioning his other debut novel, The Sun Also Rises."
+      },
+      {
+        "t": "~06:29",
+        "speaker": "Host 1 (clarifier)",
+        "text": "Wow."
+      },
+      {
+        "t": "~06:29",
+        "speaker": "Host 2 (expert)",
+        "text": "Right. To pull that off cohesively, the system dynamically shifted its attention mids sentence to a completely different retrieve document about his broader bibliography. And it did all of this without breaking the grammatical structure of the sentence."
       }
     ],
-    "unsupported_claims": [],
+    "unsupported_claims": [
+      "~04:19 'The AI is then instructed to synthesize its answer only using the provided documents. No guessing allowed.' Contradicted by paper A: 'RAG can generate correct answers even when the correct answer is not in any retrieved document, achieving 11.8% accuracy in such cases for NQ'; RAG has no such instruction.",
+      "~04:46 'the system retrieves a single relevant document' (RAG-Sequence). Distorted: paper A retrieves the top K documents and marginalises the sequence probability over them; only the per-candidate document is fixed for the whole sequence.",
+      "~06:03-06:21 The clue 'started' with A Farewell to Arms and then moved to 'his other debut novel, The Sun Also Rises'. Order reversed: the generated clue is '\"The Sun Also Rises\" is a novel by this author of \"A Farewell to Arms\"'; 'debut' is not in any source.",
+      "~06:11 / ~06:29 'internal attention mechanism ... shifted its attention ... to a retrieved document about his broader bibliography'. Paper A measures the document posterior p(z|x,y), not attention, and adds that after the first token of each title the posterior flattens because the model's parametric knowledge completes the title; 'broader bibliography' is invented."
+    ],
     "scores": {
-      "factual_fidelity": null,
-      "persona_differentiation": null,
-      "pedagogical_value": null
+      "factual_fidelity": 2,
+      "persona_differentiation": 4,
+      "pedagogical_value": 3
     },
     "score_justification": {
-      "factual_fidelity": null,
-      "persona_differentiation": null,
-      "pedagogical_value": null
+      "factual_fidelity": "Four distorted or contradicted claims in about 2.5 minutes (listed above), though no invented numbers or codes.",
+      "persona_differentiation": "Clear roles: Host 1 asks, pushes back ('word salad?') and summarises; Host 2 explains. Host 1 sometimes supplies source facts itself and many turns are filler ('Wow', 'Okay').",
+      "pedagogical_value": "'Bringing the library to the AI' and 'open book' make RAG intuitive, but they reinforce the false idea that RAG answers only from retrieved text, which the paper's own Hemingway example contradicts."
     },
-    "critique_250_words": null
+    "critique_250_words": "The Deep Dive is engaging and well built. It opens with the AURA incident, then moves step by step from parametric versus non-parametric memory to RAG, RAG-Sequence versus RAG-Token, sparse versus dense retrieval and finally GraphRAG. The two-host format works best when Host 1 pushes back (\"does that actually produce a coherent sentence or is it just word salad?\"): the objection forces a concrete example instead of another definition, which is exactly what a learner needs.\n\nGrounding, however, is clearly weaker than in the chat answers. In the 2.5-minute excerpt four statements distort paper A: RAG is said to answer \"only using the provided documents, no guessing allowed\", while the paper shows RAG answering correctly when the answer is in no retrieved document (11.8 % on NQ); RAG-Sequence is said to retrieve a single document instead of marginalising over the top K; the Hemingway clue is told in reverse order; and the document posterior becomes an \"attention mechanism\". Outside the excerpt, the opening dramatises record C-29 (the invented fix is \"executed\", while the archive says the navigation officer rejected it), and the index hot-swap is told as a clean success where the paper reports 70 % and 68 % accuracy.\n\nThe core problem is that the podcast carries no citations, so none of these slips is visible to a listener, and the confident, friendly tone makes them more convincing. Conversational audio is therefore useful to motivate a topic and give a first mental model, but not as a study source for technical details: every mechanism it explains still has to be checked against the papers.",
+    "method_note": "Claude cannot listen to audio. The episode was downloaded (m4a) and uploaded as a source into a separate, empty notebook, so Google's own speech recognition produced the transcript (4,224 words). Speaker labels are inferred from the alternating turns; times are estimated from word position (~172 words per minute); obvious recognition errors are marked [sic]. Voice quality (pauses, breathing, intonation) could not be assessed. Every claim in the excerpt was checked against the extracted text of paper A in the Mission 05 notebook."
   },
-  "conclusions": null
+  "conclusions": "**Citations are almost always present, but rarely sufficient on their own.** 40 of 41 factual sentences carried at least one badge (claim coverage 98 %), and 92 of 98 sentence-badge pairs pointed to a passage that is at least related (lenient precision 0.94). Only 33 of 98 (strict precision 0.34) fully entail their sentence alone. The main reason is how NotebookLM cites: it attaches two to five overlapping chunks to one sentence, each covering one part, and it often fuses a source fact with its own inference (e.g. G1 applies RAG-Token to AURA; paper A never mentions AURA). A badge therefore shows where evidence is, not that the sentence is proven.\n\n**The 6 failed citations show three failure modes.** (1) Chunk boundaries: NotebookLM cites fixed-size chunks that cut records mid-sentence, so the supporting text sometimes sits in the neighbouring, uncited chunk (G2, records C-19/C-20). (2) Wrong chunk: G2 cites log retention (C-35) for a claim about dense retrieval. (3) Contradiction: G4 says RAG keeps memory 'strictly as vector embeddings', but the cited passage says the memory is raw text; G4 also calls the FAISS index 'flat' while its own cited passage says it uses an HNSW approximation.\n\n**Epistemic refusal is strong.** 2 of 3 trap questions got a clean refusal, including N2, where the answer is well-known general knowledge and the model did not use it. N3 rejected the false premise but added one unsupported detail ('pre-trained embeddings'). Our own Subsystem 05 pipeline refused only N1, which confirms the Part 4 finding that similarity scores cannot decide answerability.\n\n**For AURA:** keep per-sentence citations, cite at sentence level instead of fixed-size chunks, and verify safety-critical claims by checking the cited text, never by the presence of a badge.\n\n**The Audio Overview trades grounding for engagement.** Without citations, 4 distorted claims appear in a 2.5-minute technical excerpt (factual fidelity 2/5), although the two hosts keep distinct roles (4/5) and the analogies make the ideas approachable (3/5). Listeners cannot see where a claim comes from, so the audio should not be used to learn details."
 }

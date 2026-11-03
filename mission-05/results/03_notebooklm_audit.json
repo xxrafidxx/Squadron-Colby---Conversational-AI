@@ -3,55 +3,111 @@
     "per_query": [
       {
         "id": "G1",
-        "complete": false
+        "complete": true,
+        "citations": 14,
+        "entailed": 5,
+        "partial": 8,
+        "not_entailed": 1,
+        "precision": 0.35714285714285715,
+        "lenient_precision": 0.9285714285714286,
+        "claims": 6,
+        "cited_claims": 6,
+        "coverage": 1.0
       },
       {
         "id": "G2",
-        "complete": false
+        "complete": true,
+        "citations": 13,
+        "entailed": 4,
+        "partial": 5,
+        "not_entailed": 4,
+        "precision": 0.3076923076923077,
+        "lenient_precision": 0.6923076923076923,
+        "claims": 8,
+        "cited_claims": 8,
+        "coverage": 1.0
       },
       {
         "id": "G3",
-        "complete": false
+        "complete": true,
+        "citations": 21,
+        "entailed": 8,
+        "partial": 13,
+        "not_entailed": 0,
+        "precision": 0.38095238095238093,
+        "lenient_precision": 1.0,
+        "claims": 8,
+        "cited_claims": 8,
+        "coverage": 1.0
       },
       {
         "id": "G4",
-        "complete": false
+        "complete": true,
+        "citations": 37,
+        "entailed": 11,
+        "partial": 25,
+        "not_entailed": 1,
+        "precision": 0.2972972972972973,
+        "lenient_precision": 0.972972972972973,
+        "claims": 13,
+        "cited_claims": 12,
+        "coverage": 0.9230769230769231
       },
       {
         "id": "G5",
-        "complete": false
+        "complete": true,
+        "citations": 13,
+        "entailed": 5,
+        "partial": 8,
+        "not_entailed": 0,
+        "precision": 0.38461538461538464,
+        "lenient_precision": 1.0,
+        "claims": 6,
+        "cited_claims": 6,
+        "coverage": 1.0
       }
     ],
-    "overall": null
+    "overall": {
+      "queries_complete": 5,
+      "citations": 98,
+      "entailed": 33,
+      "partial": 59,
+      "not_entailed": 6,
+      "claims": 41,
+      "cited_claims": 40,
+      "precision": 0.336734693877551,
+      "lenient_precision": 0.9387755102040817,
+      "coverage": 0.975609756097561
+    }
   },
   "refusal": {
     "per_probe": [
       {
         "id": "N1",
-        "verdict": null
+        "verdict": "refused"
       },
       {
         "id": "N2",
-        "verdict": null
+        "verdict": "refused"
       },
       {
         "id": "N3",
-        "verdict": null
+        "verdict": "partial_refusal"
       }
     ],
-    "complete": 0,
-    "refusal_rate": null
+    "complete": 3,
+    "refusal_rate": 0.6666666666666666
   },
   "audio": {
-    "complete": false,
+    "complete": true,
     "scores": {
-      "factual_fidelity": null,
-      "persona_differentiation": null,
-      "pedagogical_value": null
+      "factual_fidelity": 2,
+      "persona_differentiation": 4,
+      "pedagogical_value": 3
     },
-    "mean": null,
-    "excerpt_words": 0,
-    "unsupported_claims": 0
+    "mean": 3.0,
+    "excerpt_words": 420,
+    "unsupported_claims": 4
   },
   "baseline_probes": [
     {
@@ -78,5 +134,5 @@
     }
   ],
   "record_issues": [],
-  "status": "pending"
+  "status": "complete"
 }

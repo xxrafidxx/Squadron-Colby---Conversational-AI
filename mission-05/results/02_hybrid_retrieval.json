@@ -1,0 +1,895 @@
+{
+  "corpus_records": 36,
+  "embedder": "WordLlama l2_supercat (256-d, pretrained, offline)",
+  "k1": 1.5,
+  "b": 0.75,
+  "rrf_k": 60,
+  "summary": {
+    "exact code": {
+      "bm25": {
+        "n": 12,
+        "hit@1": 0.9166666666666666,
+        "hit@3": 1.0,
+        "mrr@10": 0.9583333333333334
+      },
+      "dense": {
+        "n": 12,
+        "hit@1": 0.8333333333333334,
+        "hit@3": 0.9166666666666666,
+        "mrr@10": 0.875
+      },
+      "rrf": {
+        "n": 12,
+        "hit@1": 0.8333333333333334,
+        "hit@3": 0.9166666666666666,
+        "mrr@10": 0.8842592592592592
+      },
+      "rrf_code": {
+        "n": 12,
+        "hit@1": 0.9166666666666666,
+        "hit@3": 0.9166666666666666,
+        "mrr@10": 0.9375
+      }
+    },
+    "concept": {
+      "bm25": {
+        "n": 12,
+        "hit@1": 0.25,
+        "hit@3": 0.3333333333333333,
+        "mrr@10": 0.36388888888888893
+      },
+      "dense": {
+        "n": 12,
+        "hit@1": 0.5833333333333334,
+        "hit@3": 0.75,
+        "mrr@10": 0.7021825396825397
+      },
+      "rrf": {
+        "n": 12,
+        "hit@1": 0.3333333333333333,
+        "hit@3": 0.6666666666666666,
+        "mrr@10": 0.535515873015873
+      },
+      "rrf_code": {
+        "n": 12,
+        "hit@1": 0.3333333333333333,
+        "hit@3": 0.6666666666666666,
+        "mrr@10": 0.5291666666666667
+      }
+    },
+    "mixed": {
+      "bm25": {
+        "n": 6,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      },
+      "dense": {
+        "n": 6,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      },
+      "rrf": {
+        "n": 6,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      },
+      "rrf_code": {
+        "n": 6,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      }
+    },
+    "all": {
+      "bm25": {
+        "n": 30,
+        "hit@1": 0.6666666666666666,
+        "hit@3": 0.7333333333333333,
+        "mrr@10": 0.7288888888888889
+      },
+      "dense": {
+        "n": 30,
+        "hit@1": 0.7666666666666667,
+        "hit@3": 0.8666666666666667,
+        "mrr@10": 0.8308730158730158
+      },
+      "rrf": {
+        "n": 30,
+        "hit@1": 0.6666666666666666,
+        "hit@3": 0.8333333333333334,
+        "mrr@10": 0.7679100529100528
+      },
+      "rrf_code": {
+        "n": 30,
+        "hit@1": 0.7,
+        "hit@3": 0.8333333333333334,
+        "mrr@10": 0.7866666666666667
+      }
+    }
+  },
+  "per_query": [
+    {
+      "type": "exact code",
+      "q": "Which locker holds the spare PCV-7731-X?",
+      "rel": [
+        "C-08"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-08",
+      "dense": 1,
+      "dense_top1": "C-08",
+      "rrf": 1,
+      "rrf_top1": "C-08",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-08"
+    },
+    {
+      "type": "exact code",
+      "q": "What is the service interval of PCV-7713-X?",
+      "rel": [
+        "C-09"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-09",
+      "dense": 2,
+      "dense_top1": "C-08",
+      "rrf": 2,
+      "rrf_top1": "C-08",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-09"
+    },
+    {
+      "type": "exact code",
+      "q": "Steps of procedure SR-11",
+      "rel": [
+        "C-05"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-05",
+      "dense": 1,
+      "dense_top1": "C-05",
+      "rrf": 1,
+      "rrf_top1": "C-05",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-05"
+    },
+    {
+      "type": "exact code",
+      "q": "ALPHA-9",
+      "rel": [
+        "C-07"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-07",
+      "dense": 1,
+      "dense_top1": "C-07",
+      "rrf": 1,
+      "rrf_top1": "C-07",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-07"
+    },
+    {
+      "type": "exact code",
+      "q": "What does fix NAV-ORI-0451 record?",
+      "rel": [
+        "C-13"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-13",
+      "dense": 1,
+      "dense_top1": "C-13",
+      "rrf": 1,
+      "rrf_top1": "C-13",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-13"
+    },
+    {
+      "type": "exact code",
+      "q": "KST3-FINAL",
+      "rel": [
+        "C-32"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-32",
+      "dense": 1,
+      "dense_top1": "C-32",
+      "rrf": 1,
+      "rrf_top1": "C-32",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-32"
+    },
+    {
+      "type": "exact code",
+      "q": "Field strength of MAG-SHLD-04B",
+      "rel": [
+        "C-04"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-04",
+      "dense": 1,
+      "dense_top1": "C-04",
+      "rrf": 1,
+      "rrf_top1": "C-04",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-04"
+    },
+    {
+      "type": "exact code",
+      "q": "What is TW-TILE-220 used for?",
+      "rel": [
+        "C-10"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-10",
+      "dense": 1,
+      "dense_top1": "C-10",
+      "rrf": 1,
+      "rrf_top1": "C-10",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-10"
+    },
+    {
+      "type": "exact code",
+      "q": "When is LRS-9-DM replaced?",
+      "rel": [
+        "C-15"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-15",
+      "dense": 1,
+      "dense_top1": "C-15",
+      "rrf": 1,
+      "rrf_top1": "C-15",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-15"
+    },
+    {
+      "type": "exact code",
+      "q": "Incident I-503",
+      "rel": [
+        "C-28"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-28",
+      "dense": 1,
+      "dense_top1": "C-28",
+      "rrf": 1,
+      "rrf_top1": "C-28",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-28"
+    },
+    {
+      "type": "exact code",
+      "q": "What is stored in record C-30?",
+      "rel": [
+        "C-30"
+      ],
+      "bm25": 2,
+      "bm25_top1": "C-05",
+      "dense": null,
+      "dense_top1": "C-25",
+      "rrf": 9,
+      "rrf_top1": "C-35",
+      "rrf_code": 4,
+      "rrf_code_top1": "C-35"
+    },
+    {
+      "type": "exact code",
+      "q": "Where is locker E3-17?",
+      "rel": [
+        "C-08"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-08",
+      "dense": 1,
+      "dense_top1": "C-08",
+      "rrf": 1,
+      "rrf_top1": "C-08",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-08"
+    },
+    {
+      "type": "concept",
+      "q": "How do we keep people healthy when the neutron star sprays charged radiation at us?",
+      "rel": [
+        "C-04",
+        "C-34"
+      ],
+      "bm25": 4,
+      "bm25_top1": "C-21",
+      "dense": 2,
+      "dense_top1": "C-01",
+      "rrf": 3,
+      "rrf_top1": "C-01",
+      "rrf_code": 3,
+      "rrf_code_top1": "C-01"
+    },
+    {
+      "type": "concept",
+      "q": "Why did the ship's AI start making up travel records?",
+      "rel": [
+        "C-03",
+        "C-26",
+        "C-29"
+      ],
+      "bm25": 5,
+      "bm25_top1": "C-18",
+      "dense": 4,
+      "dense_top1": "C-35",
+      "rrf": 2,
+      "rrf_top1": "C-35",
+      "rrf_code": 3,
+      "rrf_code_top1": "C-35"
+    },
+    {
+      "type": "concept",
+      "q": "What happens if the reactor's magnetic bottle suddenly fails?",
+      "rel": [
+        "C-07"
+      ],
+      "bm25": null,
+      "bm25_top1": "C-28",
+      "dense": 7,
+      "dense_top1": "C-21",
+      "rrf": 7,
+      "rrf_top1": "C-28",
+      "rrf_code": 5,
+      "rrf_code_top1": "C-02"
+    },
+    {
+      "type": "concept",
+      "q": "How much breathable air do we have if the generators break down?",
+      "rel": [
+        "C-16"
+      ],
+      "bm25": null,
+      "bm25_top1": "C-08",
+      "dense": 1,
+      "dense_top1": "C-16",
+      "rrf": 5,
+      "rrf_top1": "C-08",
+      "rrf_code": 5,
+      "rrf_code_top1": "C-08"
+    },
+    {
+      "type": "concept",
+      "q": "How does the ship work out where it is using spinning dead stars?",
+      "rel": [
+        "C-14"
+      ],
+      "bm25": 6,
+      "bm25_top1": "C-36",
+      "dense": 5,
+      "dense_top1": "C-01",
+      "rrf": 3,
+      "rrf_top1": "C-01",
+      "rrf_code": 3,
+      "rrf_code_top1": "C-01"
+    },
+    {
+      "type": "concept",
+      "q": "Can the small transport craft fly while the star is erupting?",
+      "rel": [
+        "C-33"
+      ],
+      "bm25": null,
+      "bm25_top1": "C-22",
+      "dense": 1,
+      "dense_top1": "C-33",
+      "rrf": 6,
+      "rrf_top1": "C-14",
+      "rrf_code": 5,
+      "rrf_code_top1": "C-14"
+    },
+    {
+      "type": "concept",
+      "q": "What should the assistant say when it does not know the answer?",
+      "rel": [
+        "C-24"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-24",
+      "dense": 1,
+      "dense_top1": "C-24",
+      "rrf": 1,
+      "rrf_top1": "C-24",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-24"
+    },
+    {
+      "type": "concept",
+      "q": "Should the AI obey commands hidden inside the documents it reads?",
+      "rel": [
+        "C-25"
+      ],
+      "bm25": 2,
+      "bm25_top1": "C-35",
+      "dense": 1,
+      "dense_top1": "C-25",
+      "rrf": 1,
+      "rrf_top1": "C-25",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-25"
+    },
+    {
+      "type": "concept",
+      "q": "How long can we stay here before we run out of propellant?",
+      "rel": [
+        "C-11"
+      ],
+      "bm25": null,
+      "bm25_top1": "C-15",
+      "dense": 1,
+      "dense_top1": "C-11",
+      "rrf": 4,
+      "rrf_top1": "C-02",
+      "rrf_code": 4,
+      "rrf_code_top1": "C-02"
+    },
+    {
+      "type": "concept",
+      "q": "How bad is radio contact with the robot scouts near the star?",
+      "rel": [
+        "C-31"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-31",
+      "dense": 3,
+      "dense_top1": "C-02",
+      "rrf": 1,
+      "rrf_top1": "C-31",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-31"
+    },
+    {
+      "type": "concept",
+      "q": "What happened to the robotic explorer that flew into the nebula clouds?",
+      "rel": [
+        "C-32"
+      ],
+      "bm25": 4,
+      "bm25_top1": "C-01",
+      "dense": 1,
+      "dense_top1": "C-32",
+      "rrf": 2,
+      "rrf_top1": "C-01",
+      "rrf_code": 2,
+      "rrf_code_top1": "C-01"
+    },
+    {
+      "type": "concept",
+      "q": "Who is allowed to read the assistant's chat history?",
+      "rel": [
+        "C-35"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-35",
+      "dense": 1,
+      "dense_top1": "C-35",
+      "rrf": 1,
+      "rrf_top1": "C-35",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-35"
+    },
+    {
+      "type": "mixed",
+      "q": "Can PCV-7713-X replace the main drive's field generator?",
+      "rel": [
+        "C-09",
+        "C-08"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-09",
+      "dense": 1,
+      "dense_top1": "C-08",
+      "rrf": 1,
+      "rrf_top1": "C-08",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-09"
+    },
+    {
+      "type": "mixed",
+      "q": "Why was the course correction citing NAV-ORI-0415 rejected?",
+      "rel": [
+        "C-29",
+        "C-13"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-29",
+      "dense": 1,
+      "dense_top1": "C-13",
+      "rrf": 1,
+      "rrf_top1": "C-13",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-29"
+    },
+    {
+      "type": "mixed",
+      "q": "What is the dose limit the MAG-SHLD-04B protects the crew against?",
+      "rel": [
+        "C-04"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-04",
+      "dense": 1,
+      "dense_top1": "C-04",
+      "rrf": 1,
+      "rrf_top1": "C-04",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-04"
+    },
+    {
+      "type": "mixed",
+      "q": "Which tank gets used first because DT-3 is leaking fuel?",
+      "rel": [
+        "C-11",
+        "C-28"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-11",
+      "dense": 1,
+      "dense_top1": "C-11",
+      "rrf": 1,
+      "rrf_top1": "C-11",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-11"
+    },
+    {
+      "type": "mixed",
+      "q": "How long does SR-11 take and when must it not run?",
+      "rel": [
+        "C-05"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-05",
+      "dense": 1,
+      "dense_top1": "C-05",
+      "rrf": 1,
+      "rrf_top1": "C-05",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-05"
+    },
+    {
+      "type": "mixed",
+      "q": "Where does ALPHA-9 send the leftover plasma?",
+      "rel": [
+        "C-07"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-07",
+      "dense": 1,
+      "dense_top1": "C-07",
+      "rrf": 1,
+      "rrf_top1": "C-07",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-07"
+    }
+  ],
+  "rrf_k_sweep": {
+    "1": 0.8031481481481481,
+    "10": 0.766984126984127,
+    "60": 0.7679100529100528,
+    "200": 0.7683333333333333
+  },
+  "code_aware_weights": {
+    "code in query": {
+      "dense": 1.0,
+      "sparse": 2.0
+    },
+    "no code": {
+      "dense": 1.0,
+      "sparse": 0.5
+    }
+  },
+  "held_out_summary": {
+    "exact code": {
+      "bm25": {
+        "n": 5,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      },
+      "dense": {
+        "n": 5,
+        "hit@1": 0.4,
+        "hit@3": 0.6,
+        "mrr@10": 0.5900000000000001
+      },
+      "rrf": {
+        "n": 5,
+        "hit@1": 0.6,
+        "hit@3": 1.0,
+        "mrr@10": 0.8
+      },
+      "rrf_code": {
+        "n": 5,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      }
+    },
+    "concept": {
+      "bm25": {
+        "n": 6,
+        "hit@1": 0.8333333333333334,
+        "hit@3": 0.8333333333333334,
+        "mrr@10": 0.861111111111111
+      },
+      "dense": {
+        "n": 6,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      },
+      "rrf": {
+        "n": 6,
+        "hit@1": 0.8333333333333334,
+        "hit@3": 1.0,
+        "mrr@10": 0.9166666666666666
+      },
+      "rrf_code": {
+        "n": 6,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      }
+    },
+    "mixed": {
+      "bm25": {
+        "n": 2,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      },
+      "dense": {
+        "n": 2,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      },
+      "rrf": {
+        "n": 2,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      },
+      "rrf_code": {
+        "n": 2,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      }
+    },
+    "all": {
+      "bm25": {
+        "n": 13,
+        "hit@1": 0.9230769230769231,
+        "hit@3": 0.9230769230769231,
+        "mrr@10": 0.935897435897436
+      },
+      "dense": {
+        "n": 13,
+        "hit@1": 0.7692307692307693,
+        "hit@3": 0.8461538461538461,
+        "mrr@10": 0.8423076923076922
+      },
+      "rrf": {
+        "n": 13,
+        "hit@1": 0.7692307692307693,
+        "hit@3": 1.0,
+        "mrr@10": 0.8846153846153846
+      },
+      "rrf_code": {
+        "n": 13,
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr@10": 1.0
+      }
+    }
+  },
+  "held_out_per_query": [
+    {
+      "type": "exact code",
+      "q": "What is the rated output of PCV-7731-X?",
+      "rel": [
+        "C-08"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-08",
+      "dense": 1,
+      "dense_top1": "C-08",
+      "rrf": 1,
+      "rrf_top1": "C-08",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-08"
+    },
+    {
+      "type": "exact code",
+      "q": "Where are the PCV-7713-X spares kept?",
+      "rel": [
+        "C-09"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-09",
+      "dense": 2,
+      "dense_top1": "C-08",
+      "rrf": 2,
+      "rrf_top1": "C-08",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-09"
+    },
+    {
+      "type": "exact code",
+      "q": "Incident I-502",
+      "rel": [
+        "C-27"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-27",
+      "dense": 4,
+      "dense_top1": "C-29",
+      "rrf": 2,
+      "rrf_top1": "C-29",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-27"
+    },
+    {
+      "type": "exact code",
+      "q": "What is QT-2?",
+      "rel": [
+        "C-07"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-07",
+      "dense": 5,
+      "dense_top1": "C-36",
+      "rrf": 1,
+      "rrf_top1": "C-07",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-07"
+    },
+    {
+      "type": "exact code",
+      "q": "DT-1 temperature",
+      "rel": [
+        "C-11"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-11",
+      "dense": 1,
+      "dense_top1": "C-11",
+      "rrf": 1,
+      "rrf_top1": "C-11",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-11"
+    },
+    {
+      "type": "concept",
+      "q": "What do we do if someone gets too much radiation during a shift?",
+      "rel": [
+        "C-34"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-34",
+      "dense": 1,
+      "dense_top1": "C-34",
+      "rrf": 1,
+      "rrf_top1": "C-34",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-34"
+    },
+    {
+      "type": "concept",
+      "q": "Why can't we trust a single reading from the long-distance sensors near the star?",
+      "rel": [
+        "C-27",
+        "C-02"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-27",
+      "dense": 1,
+      "dense_top1": "C-27",
+      "rrf": 1,
+      "rrf_top1": "C-27",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-27"
+    },
+    {
+      "type": "concept",
+      "q": "How many people live aboard the ship?",
+      "rel": [
+        "C-17",
+        "C-16"
+      ],
+      "bm25": 6,
+      "bm25_top1": "C-33",
+      "dense": 1,
+      "dense_top1": "C-16",
+      "rrf": 2,
+      "rrf_top1": "C-33",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-16"
+    },
+    {
+      "type": "concept",
+      "q": "How is drinking water recycled?",
+      "rel": [
+        "C-16"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-16",
+      "dense": 1,
+      "dense_top1": "C-16",
+      "rrf": 1,
+      "rrf_top1": "C-16",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-16"
+    },
+    {
+      "type": "concept",
+      "q": "Which star system did the expedition visit before this one?",
+      "rel": [
+        "C-12",
+        "C-13"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-12",
+      "dense": 1,
+      "dense_top1": "C-12",
+      "rrf": 1,
+      "rrf_top1": "C-12",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-12"
+    },
+    {
+      "type": "concept",
+      "q": "What protects the reactor walls from the heat?",
+      "rel": [
+        "C-06",
+        "C-10"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-10",
+      "dense": 1,
+      "dense_top1": "C-10",
+      "rrf": 1,
+      "rrf_top1": "C-10",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-10"
+    },
+    {
+      "type": "mixed",
+      "q": "Is it safe to put PCV-7713-X into the main chamber?",
+      "rel": [
+        "C-09",
+        "C-08"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-09",
+      "dense": 1,
+      "dense_top1": "C-08",
+      "rrf": 1,
+      "rrf_top1": "C-08",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-09"
+    },
+    {
+      "type": "mixed",
+      "q": "How often are TW-TILE-220 tiles checked and what damage do inspectors look for?",
+      "rel": [
+        "C-10"
+      ],
+      "bm25": 1,
+      "bm25_top1": "C-10",
+      "dense": 1,
+      "dense_top1": "C-10",
+      "rrf": 1,
+      "rrf_top1": "C-10",
+      "rrf_code": 1,
+      "rrf_code_top1": "C-10"
+    }
+  ]
+}

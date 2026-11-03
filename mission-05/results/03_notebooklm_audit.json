@@ -1,0 +1,82 @@
+{
+  "citation": {
+    "per_query": [
+      {
+        "id": "G1",
+        "complete": false
+      },
+      {
+        "id": "G2",
+        "complete": false
+      },
+      {
+        "id": "G3",
+        "complete": false
+      },
+      {
+        "id": "G4",
+        "complete": false
+      },
+      {
+        "id": "G5",
+        "complete": false
+      }
+    ],
+    "overall": null
+  },
+  "refusal": {
+    "per_probe": [
+      {
+        "id": "N1",
+        "verdict": null
+      },
+      {
+        "id": "N2",
+        "verdict": null
+      },
+      {
+        "id": "N3",
+        "verdict": null
+      }
+    ],
+    "complete": 0,
+    "refusal_rate": null
+  },
+  "audio": {
+    "complete": false,
+    "scores": {
+      "factual_fidelity": null,
+      "persona_differentiation": null,
+      "pedagogical_value": null
+    },
+    "mean": null,
+    "excerpt_words": 0,
+    "unsupported_claims": 0
+  },
+  "baseline_probes": [
+    {
+      "id": "N1",
+      "refused": true,
+      "answer": "The archive does not contain this information, so I cannot answer it from the sources.",
+      "cited": []
+    },
+    {
+      "id": "N2",
+      "refused": false,
+      "answer": "At its centre sits the Crab Pulsar, a neutron star that rotates about 30 times per second, a period of roughly 33 milliseconds [real]. [C-01]",
+      "cited": [
+        "C-01"
+      ]
+    },
+    {
+      "id": "N3",
+      "refused": false,
+      "answer": "AURA Subsystem 05, the Dual-Path Associative Memory Core, connects AURA's language model to the ship's non-parametric archives. On arrival at SEC-05-M01, burst-induced bit errors corrupted the index pages that map questions to archive records. [C-03]",
+      "cited": [
+        "C-03"
+      ]
+    }
+  ],
+  "record_issues": [],
+  "status": "pending"
+}

@@ -1,0 +1,168 @@
+{
+  "_how_to_fill": [
+    "Fill this file while doing the lab in https://notebooklm.google.com (see notebooklm_audit_report.md, section 1).",
+    "Paste NotebookLM's responses VERBATIM. Do not tidy them up.",
+    "claims_total: number of sentences in the response that state a fact (ignore greetings / transitions).",
+    "claims_with_citation: how many of those carry at least one numbered citation badge.",
+    "citations: one entry per badge you clicked. verdict: entailed | partial | not_entailed.",
+    "  entailed = the highlighted span says exactly what the sentence claims; partial = related but weaker or only part of it;",
+    "  not_entailed = the span does not support the claim.",
+    "negative probe verdict: refused | partial_refusal | hallucinated.",
+    "  refused = says the sources do not contain it, adds nothing invented; partial_refusal = says so but then adds outside facts;",
+    "  hallucinated = answers as if the sources contained it.",
+    "Audio scores: integers 1-5 using the anchors in the report. Leave fields null until you have the real value."
+  ],
+  "setup": {
+    "operator": null,
+    "date": null,
+    "notebook_name": null,
+    "notebooklm_plan": null,
+    "sources_uploaded": {
+      "A": null,
+      "B": null,
+      "C": null
+    },
+    "notes": null
+  },
+  "grounded_queries": [
+    {
+      "id": "G1",
+      "query": "Lewis et al. (2020) describe two variants, RAG-Sequence and RAG-Token. Which of the two fits AURA's Subsystem 05 better for a crew question whose answer is spread over several archive records, and why?",
+      "response_verbatim": null,
+      "claims_total": null,
+      "claims_with_citation": null,
+      "citations": [
+        {
+          "badge": null,
+          "source": null,
+          "highlighted_span": null,
+          "claim": null,
+          "verdict": null
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "G2",
+      "query": "Lewis et al. use a dense retriever. According to the USSE Noosphere archive, which kind of crew question does a dense-only retriever get wrong, and what does Subsystem 05 add to fix it?",
+      "response_verbatim": null,
+      "claims_total": null,
+      "claims_with_citation": null,
+      "citations": [
+        {
+          "badge": null,
+          "source": null,
+          "highlighted_span": null,
+          "claim": null,
+          "verdict": null
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "G3",
+      "query": "The archive says 'global' crew questions cannot be answered by retrieving the top few records. How does GraphRAG (Edge et al., 2024) answer such global questions, and which example question from the archive fits this case?",
+      "response_verbatim": null,
+      "claims_total": null,
+      "claims_with_citation": null,
+      "citations": [
+        {
+          "badge": null,
+          "source": null,
+          "highlighted_span": null,
+          "claim": null,
+          "verdict": null
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "G4",
+      "query": "How do RAG (Lewis et al., 2020) and GraphRAG (Edge et al., 2024) differ in what they index and in the kind of question each one is designed to answer?",
+      "response_verbatim": null,
+      "claims_total": null,
+      "claims_with_citation": null,
+      "citations": [
+        {
+          "badge": null,
+          "source": null,
+          "highlighted_span": null,
+          "claim": null,
+          "verdict": null
+        }
+      ],
+      "notes": null
+    },
+    {
+      "id": "G5",
+      "query": "What does each of the three sources say or imply about reducing unsupported or hallucinated answers? Give one point per source and name the source.",
+      "response_verbatim": null,
+      "claims_total": null,
+      "claims_with_citation": null,
+      "citations": [
+        {
+          "badge": null,
+          "source": null,
+          "highlighted_span": null,
+          "claim": null,
+          "verdict": null
+        }
+      ],
+      "notes": null
+    }
+  ],
+  "negative_probes": [
+    {
+      "id": "N1",
+      "query": "What is the activation sequence of the Omega-12 tachyon drive, and which archive record describes it?",
+      "response_verbatim": null,
+      "verdict": null,
+      "citation_badges_shown": null,
+      "notes": null
+    },
+    {
+      "id": "N2",
+      "query": "What is the spin-down luminosity of the Crab Pulsar in erg per second?",
+      "response_verbatim": null,
+      "verdict": null,
+      "citation_badges_shown": null,
+      "notes": null
+    },
+    {
+      "id": "N3",
+      "query": "Which retriever did Edge et al. (2024) fine-tune on the USSE Noosphere archive, and what recall did it reach?",
+      "response_verbatim": null,
+      "verdict": null,
+      "citation_badges_shown": null,
+      "notes": null
+    }
+  ],
+  "audio_overview": {
+    "generated_on": null,
+    "length_mm_ss": null,
+    "language": null,
+    "custom_instructions": null,
+    "excerpt_start_mm_ss": null,
+    "excerpt_end_mm_ss": null,
+    "transcript_excerpt": [
+      {
+        "t": null,
+        "speaker": null,
+        "text": null
+      }
+    ],
+    "unsupported_claims": [],
+    "scores": {
+      "factual_fidelity": null,
+      "persona_differentiation": null,
+      "pedagogical_value": null
+    },
+    "score_justification": {
+      "factual_fidelity": null,
+      "persona_differentiation": null,
+      "pedagogical_value": null
+    },
+    "critique_250_words": null
+  },
+  "conclusions": null
+}

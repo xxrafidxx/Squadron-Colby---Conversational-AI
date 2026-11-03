@@ -1,0 +1,92 @@
+{
+  "n": 25000,
+  "dim": 768,
+  "k": 10,
+  "M": 16,
+  "ef_construction": 64,
+  "m_L": 0.36067376022224085,
+  "build_seconds": 68.05437326499987,
+  "layer_histogram": [
+    25000,
+    1539,
+    113,
+    6
+  ],
+  "flat_numpy_ms": 3.0783608566669804,
+  "flat_python_ms": 34.783520959999805,
+  "hnsw": [
+    {
+      "ef": 10,
+      "recall": 0.9795,
+      "latency_ms": 0.36435062000009566,
+      "distance_evals": 324.04
+    },
+    {
+      "ef": 20,
+      "recall": 0.9915,
+      "latency_ms": 0.551562279999871,
+      "distance_evals": 510.37
+    },
+    {
+      "ef": 40,
+      "recall": 0.9935,
+      "latency_ms": 0.9082052450003175,
+      "distance_evals": 902.96
+    },
+    {
+      "ef": 80,
+      "recall": 0.9980000000000001,
+      "latency_ms": 1.6850486949999777,
+      "distance_evals": 1641.9
+    },
+    {
+      "ef": 160,
+      "recall": 0.9990000000000001,
+      "latency_ms": 3.044496344999743,
+      "distance_evals": 2967.535
+    },
+    {
+      "ef": 320,
+      "recall": 1.0,
+      "latency_ms": 7.061817654999913,
+      "distance_evals": 5215.805
+    }
+  ],
+  "scaling": [
+    {
+      "n": 1000,
+      "distance_evals": 609.45,
+      "latency_ms": 1.0354998299999352,
+      "recall": 0.985
+    },
+    {
+      "n": 2500,
+      "distance_evals": 790.85,
+      "latency_ms": 0.7684525800004849,
+      "recall": 0.9590000000000002
+    },
+    {
+      "n": 5000,
+      "distance_evals": 873.14,
+      "latency_ms": 1.257202369999959,
+      "recall": 0.9380000000000002
+    },
+    {
+      "n": 10000,
+      "distance_evals": 910.0,
+      "latency_ms": 1.3761541600001692,
+      "recall": 0.9600000000000002
+    },
+    {
+      "n": 25000,
+      "distance_evals": 901.78,
+      "latency_ms": 1.118942230000357,
+      "recall": 0.9930000000000001
+    }
+  ],
+  "archive_check": {
+    "records": 36,
+    "embedder": "WordLlama l2_supercat (256-d, pretrained, offline)",
+    "recall_vs_exact": 1.0
+  }
+}

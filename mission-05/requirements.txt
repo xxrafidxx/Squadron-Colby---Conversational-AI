@@ -1,0 +1,6 @@
+numpy>=1.26
+wordllama>=0.4.0
+matplotlib>=3.8
+pytest>=8.0
+# for the notebook only
+nbformat>=5.9

@@ -228,9 +228,15 @@ P = "PENDING"
 
 
 def _q(text: Optional[str]) -> str:
+    """Block quote that keeps every line break (two trailing spaces = Markdown hard break)."""
     if not _filled(text):
         return f"*{P}*"
-    return "\n".join("> " + line if line.strip() else ">" for line in str(text).splitlines())
+    return "\n".join("> " + line + "  " if line.strip() else ">" for line in str(text).splitlines())
+
+
+def _c(text) -> str:
+    """Safe Markdown table cell: escape '|' (e.g. in p(y|x)) and flatten line breaks."""
+    return str(text if text is not None else "").replace("|", "\\|").replace("\n", " ")
 
 
 def render_report(rec: Dict, cm: Dict, rm: Dict, am: Dict, base: List[Dict]) -> str:
@@ -271,7 +277,7 @@ def render_report(rec: Dict, cm: Dict, rm: Dict, am: Dict, base: List[Dict]) -> 
           "---", "", "## 2. Grounded query & citation probe", "",
           "| ID | Sources | Query |", "|---|---|---|"]
     for q in GROUNDED_QUERIES:
-        L.append(f"| {q['id']} | {q['sources']} | {q['q']} |")
+        L.append(f"| {q['id']} | {q['sources']} | {_c(q['q'])} |")
     L += ["", "| ID | Claims | With badge | Coverage | Citations | Entailed | Partial | Not entailed | Precision | Lenient |",
           "|---|---|---|---|---|---|---|---|---|---|"]
     for r in cm["per_query"]:
@@ -291,7 +297,7 @@ def render_report(rec: Dict, cm: Dict, rm: Dict, am: Dict, base: List[Dict]) -> 
         if cits:
             L += ["| Badge | Source | Claim | Highlighted span | Verdict |", "|---|---|---|---|---|"]
             for c in cits:
-                L.append(f"| {c.get('badge')} | {c.get('source')} | {c.get('claim') or ''} | {c.get('highlighted_span') or ''} | {c['verdict']} |")
+                L.append(f"| {c.get('badge')} | {_c(c.get('source'))} | {_c(c.get('claim'))} | {_c(c.get('highlighted_span'))} | {c['verdict']} |")
             L.append("")
         if _filled(g.get("notes")):
             L += [f"*Notes:* {g['notes']}", ""]
@@ -301,7 +307,7 @@ def render_report(rec: Dict, cm: Dict, rm: Dict, am: Dict, base: List[Dict]) -> 
     for p, r in zip(NEGATIVE_PROBES, rm["per_probe"]):
         bx = b.get(p["id"])
         ours = ("refused" if bx["refused"] else f"answered from {', '.join(bx['cited']) or '—'} (wrong: should refuse)") if bx else "not run"
-        L.append(f"| {p['id']} | {p['trap']} | {p['q']} | {r['verdict'] or P} | {ours} |")
+        L.append(f"| {p['id']} | {p['trap']} | {_c(p['q'])} | {r['verdict'] or P} | {_c(ours)} |")
     L += ["", f"**NotebookLM refusal rate:** {f'{rm['refusal_rate']:.0%} ({rm['complete']} of 3 probes recorded)' if rm['refusal_rate'] is not None else P}", ""]
     for p in rec.get("negative_probes", []):
         L += [f"**{p['id']} response:**", "", _q(p.get("response_verbatim")), ""]
@@ -324,14 +330,14 @@ def render_report(rec: Dict, cm: Dict, rm: Dict, am: Dict, base: List[Dict]) -> 
           "### Transcript excerpt", ""]
     tx = [t for t in a.get("transcript_excerpt", []) if _filled(t.get("text"))]
     if tx:
-        L += ["| Time | Speaker | Text |", "|---|---|---|"] + [f"| {t.get('t') or ''} | {t.get('speaker') or ''} | {t['text']} |" for t in tx]
+        L += ["| Time | Speaker | Text |", "|---|---|---|"] + [f"| {_c(t.get('t'))} | {_c(t.get('speaker'))} | {_c(t['text'])} |" for t in tx]
     else:
         L.append(f"*{P}*")
     L += ["", "### Scores", "", "| Metric | Question | Anchors (5 / 3 / 1) | Score | Justification |", "|---|---|---|---|---|"]
     for k, v in AUDIO_RUBRIC.items():
         an = v["anchors"]
         L.append(f"| {k.replace('_', ' ')} | {v['question']} | {an['5']} / {an['3']} / {an['1']} | "
-                 f"{a.get('scores', {}).get(k) or P} | {a.get('score_justification', {}).get(k) or ''} |")
+                 f"{a.get('scores', {}).get(k) or P} | {_c(a.get('score_justification', {}).get(k))} |")
     L += ["", f"**Mean audio score:** {f'{am['mean']:.2f} / 5' if am['mean'] is not None else P} · "
           f"unsupported claims marked in the excerpt: {am['unsupported_claims'] if am['complete'] else P}", ""]
     for u in a.get("unsupported_claims", []):

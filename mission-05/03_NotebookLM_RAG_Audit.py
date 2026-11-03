@@ -123,7 +123,7 @@ def empty_record() -> Dict:
             {"id": p["id"], "query": p["q"], "response_verbatim": None, "verdict": None, "citation_badges_shown": None,
              "notes": None}
             for p in NEGATIVE_PROBES],
-        "audio_overview": {"generated_on": None, "length_mm_ss": None, "language": None, "custom_instructions": None,
+        "audio_overview": {"generated_on": None, "length_mm_ss": None, "language": None, "custom_instructions": None, "method_note": None,
                            "excerpt_start_mm_ss": None, "excerpt_end_mm_ss": None,
                            "transcript_excerpt": [{"t": None, "speaker": None, "text": None}],
                            "unsupported_claims": [],
@@ -320,6 +320,7 @@ def render_report(rec: Dict, cm: Dict, rm: Dict, am: Dict, base: List[Dict]) -> 
     a = rec.get("audio_overview", {})
     L += [f"Generated: {a.get('generated_on') or P} · length {a.get('length_mm_ss') or P} · language {a.get('language') or P} · "
           f"excerpt {a.get('excerpt_start_mm_ss') or P}–{a.get('excerpt_end_mm_ss') or P} ({am['excerpt_words']} words transcribed)", "",
+          *( [f"*Method:* {a['method_note']}", ""] if a.get("method_note") else [] ),
           "### Transcript excerpt", ""]
     tx = [t for t in a.get("transcript_excerpt", []) if _filled(t.get("text"))]
     if tx:

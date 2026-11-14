@@ -244,7 +244,7 @@ def render_report(rec: Dict, cm: Dict, rm: Dict, am: Dict, base: List[Dict]) -> 
     done_any = bool(cm["overall"]) or rm["complete"] or am["complete"]
     L: List[str] = []
     L += ["# NotebookLM Grounding & Citation Audit (Mission 05 · Part 3)", "",
-          "> **Historical run:** This report uses the squadron-written archive, not the official Document C published on 2026-11-09. The separate official-document lab is pending; see `notebooklm_lab/official_document_lab.md`.", "",
+          "> **Historical run:** This report uses the squadron-written archive, not the official Document C published on 2026-11-09. For the separate official-document lab results, see `notebooklm_lab/official_document_lab.md`.", "",
           "**Station:** Data & Payload Specialist · **Squadron:** Colby · **Waypoint:** `SEC-05-M01`  ",
           f"**Operator:** {st.get('operator') or P} · **Lab date:** {st.get('date') or P} · "
           f"**Notebook:** {st.get('notebook_name') or P}  ",

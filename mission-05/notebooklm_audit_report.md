@@ -1,6 +1,6 @@
 # NotebookLM Grounding & Citation Audit (Mission 05 · Part 3)
 
-> **Historical run:** This report uses the squadron-written archive, not the official Document C published on 2026-11-09. A separate official-document lab is pending; see `notebooklm_lab/official_document_lab.md`.
+> **Historical run:** This report uses the squadron-written archive, not the official Document C published on 2026-11-09. For the official-document results, see `notebooklm_lab/official_document_lab.md`.
 
 **Station:** Data & Payload Specialist · **Squadron:** Colby · **Waypoint:** `SEC-05-M01`  
 **Operator:** Kunal Choudhary (Squadron Colby); lab driven by Claude in the Claude desktop browser at Kunal's request · **Lab date:** 2026-11-03 · **Notebook:** Squadron Colby · Mission 05.  

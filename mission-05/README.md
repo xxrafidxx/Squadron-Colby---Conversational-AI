@@ -8,7 +8,7 @@ AURA Subsystem Repair: Subsystem 05: *Dual-Path Associative Memory Core* (+7.1% 
 
 ---
 
-> **Professor update (9 November 2026):** The course repository now supplies the official [Document C](corpus/Document_C_official.md). The measurements and NotebookLM audit below are historical results using the squadron-written 36-record archive, not measurements on the official document. The official-document NotebookLM lab remains **pending**; see [the updated lab plan](notebooklm_lab/official_document_lab.md). `07_official_archive_check.py` performs limited BM25 and injection-detector smoke tests on the official file.
+> **Professor update (9 November 2026):** The course repository now supplies the official [Document C](corpus/Document_C_official.md). The measurements and NotebookLM audit below are historical results using the squadron-written 36-record archive, not measurements on the official document. See [the five-answer official-source audit and audio evaluation](notebooklm_lab/official_document_lab.md). `07_official_archive_check.py` performs limited BM25 and injection-detector smoke tests on the official file.
 
 ## Overview
 
@@ -24,7 +24,7 @@ AURA lost access to her archives and started inventing astrogation logs. Subsyst
   - **Limit:** similarity scores cannot decide *answerability*; only unknown identifiers are refused reliably.
 - **EU AI Act:** review in `06_AI_Act_Compliance.md`.
 
-**Archive history:** On 2026-11-02 the official file was missing, so the squadron wrote the 36-record archive (`corpus/`, Markdown + PDF). On 2026-11-09 the professor added the official file, preserved separately as `corpus/Document_C_official.md`. The earlier benchmark, audit and scores use the squadron-written archive. The official-document lab must be run separately.
+**Archive history:** On 2026-11-02 the official file was missing, so the squadron wrote the 36-record archive (`corpus/`, Markdown + PDF). On 2026-11-09 the professor added the official file, preserved separately as `corpus/Document_C_official.md`. The earlier benchmark, audit and scores use the squadron-written archive. The separate official-source lab is recorded in notebooklm_lab/official_document_lab.md.
 
 ---
 
@@ -84,7 +84,7 @@ pytest -q                          # 25 tests
 |---|---|---|:---:|
 | **Part 1: HNSW** | Rafid Mohammad Ahsan | 25k × 768: recall@10 0.980 at 0.36 ms (1.3 % of distances) vs 34.8 ms Python / 3.1 ms NumPy flat; layer sizes match N·M⁻ˡ | Ready for sign-off |
 | **Part 2: BM25 + RRF** | Rafid Mohammad Ahsan | Hit@1 exact codes BM25 0.92 / dense 0.83; paraphrases dense 0.58 / BM25 0.25; plain RRF MRR 0.77; code-aware RRF 13/13 on held-out | Ready for sign-off |
-| **Part 3: NotebookLM audit** | Tahjib Al Sakin | coverage 98 %; citation precision 0.34 strict / 0.94 lenient (98 citations); refusals 2/3 clean + 1 partial; audio 3.0/5 (fidelity 2); historical corpus | Official-source audit in progress |
+| **Part 3: NotebookLM audit** | Tahjib Al Sakin | coverage 98 %; citation precision 0.34 strict / 0.94 lenient (98 citations); refusals 2/3 clean + 1 partial; audio 3.0/5 (fidelity 2); historical corpus | Official-source audit: 30/61 strictly supported |
 | **Part 4: Safety & RAG Triad** | Kunal Choudhary | detector recall 25/25, precision 0.86 (rules alone 0.96); faithfulness scorer 0.90; tampering detected; poison quarantined | Ready for sign-off |
 | **Compliance: EU AI Act** | Mubina Rahaman Jerin | Art. 50 disclosure + marking, Art. 15 robustness, GDPR, provenance | Ready for sign-off |
 

@@ -44,7 +44,7 @@ SOURCES = [
      "get": "https://arxiv.org/pdf/2005.11401"},
     {"id": "B", "title": "Edge et al. (2024): From Local to Global: A Graph RAG Approach to Query-Focused Summarization",
      "get": "https://arxiv.org/pdf/2404.16130"},
-    {"id": "C", "title": "USSE Noosphere Technical Archive Extract (written by Squadron Colby; not in the course repo)",
+    {"id": "C", "title": "Squadron-written USSE Noosphere archive (historical run; official Document C published 2026-11-09)",
      "get": "corpus/USSE_Noosphere_Technical_Archive_Extract.pdf (or the .md file)"},
 ]
 
@@ -244,6 +244,7 @@ def render_report(rec: Dict, cm: Dict, rm: Dict, am: Dict, base: List[Dict]) -> 
     done_any = bool(cm["overall"]) or rm["complete"] or am["complete"]
     L: List[str] = []
     L += ["# NotebookLM Grounding & Citation Audit (Mission 05 · Part 3)", "",
+          "> **Historical run:** This report uses the squadron-written archive, not the official Document C published on 2026-11-09. The separate official-document lab is pending; see `notebooklm_lab/official_document_lab.md`.", "",
           "**Station:** Data & Payload Specialist · **Squadron:** Colby · **Waypoint:** `SEC-05-M01`  ",
           f"**Operator:** {st.get('operator') or P} · **Lab date:** {st.get('date') or P} · "
           f"**Notebook:** {st.get('notebook_name') or P}  ",

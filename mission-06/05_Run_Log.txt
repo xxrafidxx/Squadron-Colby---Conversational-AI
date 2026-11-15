@@ -1,0 +1,14 @@
+Mission: mission complete | transitions: 18
+(0, False, False) -> (0, False, False) | reward -5 | Tool Execution Error: arguments.intensity is outside the allowed range
+(0, False, False) -> (70, False, False) | reward -1 | Observation: Shields at 70%
+(70, False, False) -> (70, True, False) | reward -1 | Observation: Corridor clear
+(70, True, False) -> (70, True, True) | reward 20 | Observation: Vector accepted: (-0.85, 0.52, 0.05)
+Discounted episode return: 10.295
+outer hold {'clear': 0.0, 'outer': 0.5, 'shear': 0.5}
+outer warp {'clear': 0.75, 'outer': 0.0, 'shear': 0.25}
+shear hold {'clear': 0.0, 'outer': 0.6667, 'shear': 0.3333}
+shear warp {'clear': 0.3333, 'outer': 0.0, 'shear': 0.6667}
+PASS: normal route and 21 calls under the 20-transition budget
+PASS: malformed input, validation, execution failure and recovery
+PASS: G0 = 22.635 and action-conditioned transition frequencies
+PASS: period 3 at observation 6; identical failed proposal blocked on attempt 3

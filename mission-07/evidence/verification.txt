@@ -1,0 +1,117 @@
+UTC: 2026-11-21T11:08:49.129718+00:00
+Python: 3.12.10
+All models, priors and rollout answers in these tests are synthetic.
+
+$ python tot_solver.py
+=== Subsystem 07 (Part 1): Tree-of-Thoughts Solver Verification ===
+[ToT-BFS] Expansions Used: 5/12
+[ToT-BFS] Best Terminal Score: 0.85
+[ToT-BFS] Winning Trajectory: Prompt: Synthesize 24.0 km/s from [4, 9, 10, 13] -> Step 1A: 13 - 9 = 4 (Remaining: [4, 4, 10]) [VALID] -> Step 2A: 10 - 4 = 6 (Remaining: [4, 6]) [OPTIMAL] -> Step 3A: 4 * 6 = 24.0 km/s -> Escape Geodesic Locked! [GOAL]
+[ToT-DFS] Expansions Used: 5/12
+[ToT-DFS] Winning Trajectory: Prompt: Synthesize 24.0 km/s from [4, 9, 10, 13] -> Step 1A: 13 - 9 = 4 (Remaining: [4, 4, 10]) [VALID] -> Step 2A: 10 - 4 = 6 (Remaining: [4, 6]) [OPTIMAL] -> Step 3A: 4 * 6 = 24.0 km/s -> Escape Geodesic Locked! [GOAL]
+[OK] Part 1 (Systems Architect) verification passed.
+Exit code: 0
+
+
+$ python mcts_protocol.py
+=== Subsystem 07 (Part 2): MCTS & PUCT Protocol Verification ===
+Branch A -> Q=0.75, N=5, P=0.50 | PUCT = 1.2500
+Branch B -> Q=0.55, N=1, P=0.40 | PUCT = 1.7500
+Selected Next Node for Expansion: Branch B: Retrograde Penrose Extraction
+[OK] Part 2 (Communications & Protocol Officer) verification passed.
+Exit code: 0
+
+
+$ python prm_evaluator.py
+=== Subsystem 07 (Part 3): PRM vs. ORM & Math-Shepherd Verification ===
+Rigorous Chain       | ORM=1.00 | PRM(min)=0.940 | PRM(prod)=0.831 | PRM(geo)=0.940
+False-Positive Trap  | ORM=1.00 | PRM(min)=0.120 | PRM(prod)=0.106 | PRM(geo)=0.473
+Math-Shepherd Step Estimation (M=4 rollouts): {'soft_label': 0.75, 'hard_label': 1.0}
+[OK] Part 3 (Data & Payload Specialist) verification passed.
+Exit code: 0
+
+
+$ python horizon_pruner.py
+=== Subsystem 07 (Part 4): Event Horizon Pruner & Reward-Hacking Defense ===
+Surviving Steps (1/3): ['Step 1: Compute Schwarzschild radius r_s = 2GM / c^2 = 1.27e10 m']
+Pruned at Step: 2 | Reward Hacking Detected: True
+  [Step 2] ANOMALY 07: SYCOPHANTIC_FILLER_DETECTED; 0.960000 -> 0.192000
+  [Step 2] EVENT HORIZON BREACH: 0.192000 < 0.450000; branch severed
+[OK] Part 4 (Security & Ethics Sentinel) verification passed.
+Exit code: 0
+
+
+$ python -m unittest -v
+test_both_search_engines_apply_guard (test_mission07.IntegrationTests.test_both_search_engines_apply_guard) ... ok
+test_exact_puct_and_zero_visits (test_mission07.MCTSTests.test_exact_puct_and_zero_visits) ... ok
+test_four_phases_and_ancestor_values (test_mission07.MCTSTests.test_four_phases_and_ancestor_values) ... ok
+test_invalid_priors_and_repeated_expansion (test_mission07.MCTSTests.test_invalid_priors_and_repeated_expansion) ... ok
+test_reward_bounds (test_mission07.MCTSTests.test_reward_bounds) ... ok
+test_terminal_and_empty_expansion (test_mission07.MCTSTests.test_terminal_and_empty_expansion) ... ok
+test_invalid_and_empty_scores (test_mission07.PRMTests.test_invalid_and_empty_scores) ... ok
+test_reductions_and_log_stability (test_mission07.PRMTests.test_reductions_and_log_stability) ... ok
+test_shepherd_labels (test_mission07.PRMTests.test_shepherd_labels) ... ok
+test_untagged_two_sign_errors (test_mission07.PRMTests.test_untagged_two_sign_errors) ... ok
+test_beam_width_changes_reachable_path (test_mission07.SearchTests.test_beam_width_changes_reachable_path) ... ok
+test_dfs_backtracks_from_high_score_dead_end (test_mission07.SearchTests.test_dfs_backtracks_from_high_score_dead_end) ... ok
+test_exact_budget_including_pruned (test_mission07.SearchTests.test_exact_budget_including_pruned) ... ok
+test_last_budget_child_is_returned (test_mission07.SearchTests.test_last_budget_child_is_returned) ... ok
+test_settings_and_reused_root (test_mission07.SearchTests.test_settings_and_reused_root) ... ok
+test_threshold_equality_and_nan (test_mission07.SearchTests.test_threshold_equality_and_nan) ... ok
+test_zero_depth_dead_end_and_all_pruned (test_mission07.SearchTests.test_zero_depth_dead_end_and_all_pruned) ... ok
+test_no_rounding_before_threshold (test_mission07.SecurityTests.test_no_rounding_before_threshold) ... ok
+test_nonconsecutive_repetition (test_mission07.SecurityTests.test_nonconsecutive_repetition) ... ok
+test_step_splitting_with_labels (test_mission07.SecurityTests.test_step_splitting_with_labels) ... ok
+test_sycophantic_filler_and_early_stop (test_mission07.SecurityTests.test_sycophantic_filler_and_early_stop) ... ok
+test_validation_clean_and_empty (test_mission07.SecurityTests.test_validation_clean_and_empty) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.047s
+
+OK
+Exit code: 0
+
+
+$ python run_experiments.py
+=== Mission 07 integrated experiments ===
+BFS beam=1 budget=3 used=3 depth=2 score=0.900 goal=False
+BFS beam=2 budget=3 used=3 depth=2 score=0.900 goal=False
+DFS beam=None budget=3 used=3 depth=2 score=0.900 goal=False
+BFS beam=1 budget=5 used=4 depth=2 score=0.900 goal=False
+BFS beam=2 budget=5 used=5 depth=2 score=0.900 goal=False
+DFS beam=None budget=5 used=5 depth=2 score=0.900 goal=False
+BFS beam=1 budget=8 used=4 depth=2 score=0.900 goal=False
+BFS beam=2 budget=8 used=6 depth=3 score=0.800 goal=True
+DFS beam=None budget=8 used=6 depth=3 score=0.800 goal=True
+BFS beam=1 budget=12 used=4 depth=2 score=0.900 goal=False
+BFS beam=2 budget=12 used=6 depth=3 score=0.800 goal=True
+DFS beam=None budget=12 used=6 depth=3 score=0.800 goal=True
+Valid algebra: ORM=1.00, min=0.940, prod=0.830584, geo=0.940000, Shepherd soft=0.75, hard=1
+Two sign errors: ORM=1.00, min=0.120, prod=0.013536, geo=0.238322, Shepherd soft=0.25, hard=1
+{
+  "tot_path": [
+    "2*x - 6 = 0",
+    "2*x = 6",
+    "x = 3"
+  ],
+  "tot_expansions": 4,
+  "tot_score": 0.94,
+  "mcts_path": [
+    "2*x - 6 = 0",
+    "2*x = 6",
+    "x = 3"
+  ],
+  "mcts_root_visits": 12,
+  "mcts_root_value": 0.9399999999999996,
+  "mcts_candidates": 4,
+  "mcts_candidate_budget": 32,
+  "rejected": [
+    "[Step 2] ANOMALY 07: SYCOPHANTIC_FILLER_DETECTED; 0.960000 -> 0.192000",
+    "[Step 2] EVENT HORIZON BREACH: 0.120000 < 0.450000; branch severed",
+    "[Step 2] EVENT HORIZON BREACH: 0.192000 < 0.450000; branch severed"
+  ]
+}
+Evidence saved to evidence/results.json
+Exit code: 0
+
+ALL FOUR COURSE HARNESSES, 22 REGRESSION TESTS AND EXPERIMENTS PASSED.
